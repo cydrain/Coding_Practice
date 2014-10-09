@@ -15,7 +15,7 @@
         while (m >= (n<<i)) {
             i++;
         }
-        while (m >= n && i--) {
+        while (i--) {
             if (m >= (n<<i)) {
                 m -= n<<i;
                 r += 1<<i;

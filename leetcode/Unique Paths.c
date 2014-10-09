@@ -31,3 +31,15 @@
         
         return dp[0][0];
     }
+
+
+    int uniquePaths(int m, int n) {
+        vector<vector<int>> block(m, vector<int>(n, 1));
+        for (int i = m-2; i >= 0; i--) {
+            for (int j = n-2; j >= 0; j--) {
+                block[i][j] = block[i+1][j] + block[i][j+1];
+            }
+        }
+        return block[0][0];
+    }
+

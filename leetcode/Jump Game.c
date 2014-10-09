@@ -25,3 +25,15 @@
         }
         return false;
     }
+
+
+    bool canJump(int A[], int n) {
+        int i, maxdist = 0;
+        for (i = 0; i < n; i ++) {
+            if (i > maxdist) break;
+            maxdist = max(maxdist, i+A[i]);
+            if (maxdist >= n-1) return true;
+        }
+        return false;
+    }
+

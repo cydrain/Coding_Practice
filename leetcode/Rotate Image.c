@@ -28,3 +28,23 @@
             }
         }
     }
+
+
+    void rotate(vector<vector<int> > &matrix) {
+        int n = matrix.size();
+        int i, j, tmp;
+        for (i = 0; i < n/2; i++) {
+            for (j = i; j < end; j++) {
+                tmp = matrix[i][j];
+                // bottom = left
+                matrix[i][j] = matrix[n-1-j][i];
+                // left = top
+                matrix[n-1-j][i] = matrix[n-1-i][n-1-j];
+                // top = right
+                matrix[n-1-i][n-1-j] = matrix[j][n-1-i];
+                // right = bottom
+                matrix[j][n-1-i] = tmp;
+            }
+        }
+    }
+

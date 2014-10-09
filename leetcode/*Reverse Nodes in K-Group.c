@@ -49,3 +49,39 @@
         delete dummy;
         return head;
     }
+
+
+
+
+    // reverse the nodes between "prev" (not included) and "end" (not included)
+    void reverseKGroupHelper(ListNode *prev, ListNode *end) {
+        ListNode *first = prev->next, *node;
+        for (node = first->next; node != end; node = first->next) {
+            first->next = node->next;
+            node->next = prev->next;
+            prev->next = node;
+        }
+    }
+    ListNode *reverseKGroup(ListNode *head, int k) {
+        if (!head || !head->next) return head;
+        if (k == 1) return head;
+        ListNode *dummy = new ListNode(0);
+        dummy->next = head;
+        ListNode *prev = dummy, *first, *end;
+        int i;
+        while (prev != NULL) {
+            first = prev->next;
+            end = prev;
+            for (i = 0; i < k; i++) {
+                if (end == NULL) break;
+                end = end->next;
+            }
+            if (i != k || end == NULL) break;
+            reverseKGroupHelper(prev, end->next);
+            prev = first;
+        }
+        head = dummy->next;
+        delete dummy;
+        return head;
+    }
+

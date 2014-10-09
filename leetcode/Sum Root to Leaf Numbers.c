@@ -42,3 +42,17 @@
         sumNumbersHelper(root, 0, sum);
         return sum;
     }
+
+
+
+    int sumNumbersHelper(TreeNode* root, int parentNum) {
+        if (!root) return 0;
+        int currNum = parentNum*10 + root->val;
+        if (!root->left && !root->right) return currNum;
+        return sumNumbersHelper(root->left, currNum) +
+               sumNumbersHelper(root->right, currNum);
+    }
+    int sumNumbers(TreeNode *root) {
+        return sumNumbersHelper(root, 0);
+    }
+

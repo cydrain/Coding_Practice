@@ -149,3 +149,45 @@
         r[1] = searchRight(A, 0, n-1, target);
         return r;
     }
+
+
+
+    int searchRangeLeft(int A[], int start, int end, int target) {
+        int m;
+        while (start < end) {
+            m = start + (end-start)/2;
+            if (A[m] == target) {
+                end = m;
+            }
+            else if (target < A[m]) {
+                end = m - 1;
+            }
+            else {
+                start = m + 1;
+            }
+        }
+        return (A[start] == target) ? start : -1;
+    }
+    int searchRangeRight(int A[], int start, int end, int target) {
+        int m;
+        while (start < end) {
+            m = start + (end-start+1)/2;
+            if (A[m] == target) {
+                start = m;
+            }
+            else if (target < A[m]) {
+                end = m - 1;
+            }
+            else {
+                start = m + 1;
+            }
+        }
+        return (A[start] == target) ? start : -1;
+    }
+    vector<int> searchRange(int A[], int n, int target) {
+        vector<int> result(2, -1);
+        result[0] = searchRangeLeft(A, 0, n-1, target);
+        result[1] = searchRangeRight(A, 0, n-1, target);
+        return result;
+    }
+

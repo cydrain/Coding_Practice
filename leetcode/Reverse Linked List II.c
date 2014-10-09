@@ -41,32 +41,29 @@
 
 
 
-    // prev is the ListNode before m-th node, end is the ListNode after n-th node
-    void reverseBetween(ListNode *prev, ListNode *end) {
-        ListNode *curr = prev->next, *node = curr->next;
-        while (node != end) {
-            curr->next = node->next;
-            node->next = prev->next;
-            prev->next = node;
-            node = curr->next;
-        }
-    }
     ListNode *reverseBetween(ListNode *head, int m, int n) {
-        // Note: The Solution object is instantiated only once and is reused by each test case.
-        if (m == n) return head;
+        if (!head || !head->next || m == n) return head;
         ListNode *dummy = new ListNode(0);
+        ListNode *prev, *curr, *node;
+        int i = 0;
+        
         dummy->next = head;
-        ListNode *prev = dummy, *n_node = head;
-        int i;
+        prev = dummy;
+        
         for (i = 1; i < m; i++) {
             prev = prev->next;
         }
-        for (i = 1; i < n; i++) {
-            n_node = n_node->next;
+        
+        curr = prev->next;
+        for (i = m; i < n; i++) {
+            node = curr->next;
+            curr->next = node->next;
+            node->next = prev->next;
+            prev->next = node;
         }
-        reverseBetween(prev, n_node->next);
         
         head = dummy->next;
         delete dummy;
         return head;
     }
+

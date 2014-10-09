@@ -43,3 +43,37 @@
         combinationSum(C, T, 0, path, r);
         return r;
     }
+
+
+
+    void combinationSum2Helper(vector<int> &num,
+                               int target,
+                               int index,           // start index of "num"
+                               vector<int> &comb,   // used to record one combination
+                               vector<vector<int>> &result) {
+        int n = num.size();
+        int i;
+        
+        if (target == 0) {
+            result.push_back(comb);
+        }
+        else {
+            for (i = index; i < n; i++) {
+                if (num[i] > target) break; // all other element also larger than target
+                if (i > index && num[i] == num[i-1]) continue;  // remove duplication
+                comb.push_back(num[i]);
+                combinationSum2Helper(num, target-num[i], i+1, comb, result);
+                comb.pop_back();
+            }
+        }
+    }
+    vector<vector<int> > combinationSum2(vector<int> &num, int target) {
+        vector<int> comb;
+        vector<vector<int>> result;
+        
+        sort(num.begin(), num.end());
+        combinationSum2Helper(num, target, 0, comb, result);
+        
+        return result;
+    }
+

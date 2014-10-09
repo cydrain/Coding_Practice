@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <unistd.h>
 
-const int BUFFER_SIZE = 10;
+const int PRODUCT_NUM = 10;
 pthread_mutex_t mutex;
 sem_t sem_empty, sem_full;
 int g_idx;
@@ -12,26 +13,35 @@ void ConsumerFunc(void) {
     volatile int flag = 1;
     while (flag) {
         sem_wait(&sem_full);
+
         pthread_mutex_lock(&mutex);
-        printf("   Consumer get out of buffer %d\n", g_idx);
-        if (g_idx == BUFFER_SIZE) flag = 0;
+        printf("     ===>%d\n", g_idx);
+        if (g_idx == PRODUCT_NUM) {
+            flag = 0;
+        }
+        sleep(rand()%3);
         //sleep(2);
         pthread_mutex_unlock(&mutex);
+
         sem_post(&sem_empty);
-        sleep(2);
+        //sleep(rand()%2);
     }
 }
 
 void ProducerFunc(void) {
     int i;
-    for (i = 1; i <= BUFFER_SIZE; i++) {
+    for (i = 1; i <= PRODUCT_NUM; i++) {
         sem_wait(&sem_empty);
+
         pthread_mutex_lock(&mutex);
         g_idx = i;
-        printf("Producer put into buffer %d\n", i);
+        printf("%d===>\n", g_idx);
+        sleep(rand()%3);
         //sleep(1);
         pthread_mutex_unlock(&mutex);
+
         sem_post(&sem_full);
+        //sleep(rand()%2);
     }
 }
 
@@ -48,6 +58,7 @@ int main(void) {
 
     pthread_join(p_tid, NULL);
     pthread_join(c_tid, NULL);
+    pthread_mutex_destroy(&mutex);
     return 0;
 }
 

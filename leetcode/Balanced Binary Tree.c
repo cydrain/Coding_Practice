@@ -26,3 +26,24 @@
         
         return (isBalanced(root->left) && isBalanced(root->right));
     }
+
+
+
+
+    bool isBalanced(TreeNode *root, int &h) {
+        if (!root) {
+            h = 0;
+            return true;
+        }
+        int lh, rh;
+        bool lb, rb;
+        lb = isBalanced(root->left, lh);
+        rb = isBalanced(root->right, rh);
+        h = max(lh, rh) + 1;
+        return (lb && rb && abs(lh-rh) <= 1);
+    }
+    bool isBalanced(TreeNode *root) {
+        int h;
+        return isBalanced(root, h);
+    }
+

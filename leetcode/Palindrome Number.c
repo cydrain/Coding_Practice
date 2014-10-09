@@ -26,6 +26,19 @@
     }
 
 
+    bool isPalindrome(int x) {
+        if (x < 0) return false;
+        int x1 = x, y = 0;
+        
+        while (x) {
+            y = y * 10 + x % 10;
+            x = x / 10;
+        }
+        
+        return (x1 == y);
+    }
+
+
 
 // iteration solution
     bool isPalindrome(int x, int &y) {
