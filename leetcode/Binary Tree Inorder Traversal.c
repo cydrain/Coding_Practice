@@ -47,3 +47,27 @@
         
         return r;
     }
+
+
+
+    void pushLeft(stack<TreeNode*> &s, TreeNode *node) {
+        while (node != NULL) {
+            s.push(node);
+            node = node->left;
+        }
+    }
+    vector<int> inorderTraversal(TreeNode *root) {
+        stack<TreeNode*> s;
+        TreeNode *node;
+        vector<int> res;
+        if (!root) return res;
+        pushLeft(s, root);
+        while (!s.empty()) {
+            node = s.top();
+            s.pop();
+            res.push_back(node->val);
+            pushLeft(s, node->right);
+        }
+        return res;
+    }
+

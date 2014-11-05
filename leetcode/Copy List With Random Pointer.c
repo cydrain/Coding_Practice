@@ -30,3 +30,32 @@
         return m[head];
     }
     
+
+    // go through this list just once
+    RandomListNode *copyRandomList(RandomListNode *head) {
+        if (!head) return NULL;
+        map<RandomListNode*, RandomListNode*> m;
+        RandomListNode* node = head, *nodeCopy;
+        
+        nodeCopy = new RandomListNode(head->label);
+        m[head] = nodeCopy;
+        for (node = head; node; node = node->next) {
+            nodeCopy = m[node];
+            if (node->next) {
+                nodeCopy->next = new RandomListNode(node->next->label);
+                m[node->next] = nodeCopy->next;
+            }
+            if (node->random) {
+                if (m.find(node->random) != m.end()) {
+                    nodeCopy->random = m[node->random];
+                }
+                else {
+                    nodeCopy->random = new RandomListNode(node->random->label);
+                    m[node->random] = nodeCopy->random;
+                }
+            }
+        }
+
+        return m[head];
+    }
+

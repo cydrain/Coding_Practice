@@ -41,3 +41,24 @@
         itv.push_back(n);
         return itv;
     }
+
+
+    vector<Interval> insert(vector<Interval> &itv, Interval newInt) {
+        int n = itv.size();
+        vector<Interval> res;
+        int i = 0;
+        while (i < n && newInt.start > itv[i].end) {
+            res.push_back(itv[i++]);
+        }
+        while (i < n && newInt.end >= itv[i].start) {
+            newInt.start = min(newInt.start, itv[i].start);
+            newInt.end = max(newInt.end, itv[i].end);
+            i++;
+        }
+        res.push_back(newInt);
+        while (i < n) {
+            res.push_back(itv[i++]);
+        }
+        return res;
+    }
+

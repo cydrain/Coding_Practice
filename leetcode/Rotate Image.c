@@ -34,7 +34,7 @@
         int n = matrix.size();
         int i, j, tmp;
         for (i = 0; i < n/2; i++) {
-            for (j = i; j < end; j++) {
+            for (j = i; j < n-1-i; j++) {
                 tmp = matrix[i][j];
                 // bottom = left
                 matrix[i][j] = matrix[n-1-j][i];

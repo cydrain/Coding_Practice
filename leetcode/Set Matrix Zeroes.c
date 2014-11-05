@@ -62,3 +62,48 @@
             }
         }
     }
+
+
+    void setZeroes(vector<vector<int> > &matrix) {
+        int m = matrix.size();
+        int n = matrix[0].size();
+        int x0 = -1, y0= -1;
+        int i, j;
+        
+        for (i = 0; i < m; i++) {
+            for (j = 0; j < n; j++) {
+                if (matrix[i][j] == 0) {
+                    // find first 0 element, use it's row and col to mark
+                    if (x0 == -1 && y0 == -1) {
+                        x0 = i;
+                        y0 = j;
+                    }
+                    else {
+                        matrix[x0][j] = 0;
+                        matrix[i][y0] = 0;
+                    }
+                }
+            }
+        }
+        
+        if (x0 == -1 && y0 == -1) {
+            return;
+        }
+        
+        for (i = 0; i < m; i++) {
+            if (i == x0) continue;
+            for (j = 0; j < n; j++) {
+                if (j == y0) continue;
+                if (matrix[x0][j] == 0 || matrix[i][y0] == 0) {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+        
+        for (i = 0; i < m; i++) {
+            matrix[i][y0] = 0;
+        }
+        for (j = 0; j < n; j++) {
+            matrix[x0][j] = 0;
+        }
+    }

@@ -85,3 +85,38 @@
         return head;
     }
 
+
+
+    // reverse the ListNode between "prev"(not included) and "tail"(included)
+    ListNode* reverseKGroup(ListNode *prev, ListNode *tail) {
+        ListNode *first = prev->next;
+        ListNode *end = tail->next;
+        ListNode *curr;
+        for (curr = first->next; curr != end; curr = first->next) {
+            first->next = curr->next;
+            curr->next = prev->next;
+            prev->next = curr;
+        }
+        return first;
+    }
+    ListNode *reverseKGroup(ListNode *head, int k) {
+        if (!head || !head->next) return head;
+        if (k == 1) return head;
+        ListNode *dummy = new ListNode(0);
+        dummy->next = head;
+        ListNode *prev = dummy, *end = head;
+        int cnt = 0;
+        while (end != NULL) {
+            cnt++;
+            if (cnt % k == 0) {
+                prev = reverseKGroup(prev, end);
+                end = prev->next;
+            }
+            else {
+                end = end->next;
+            }
+        }
+        head = dummy->next;
+        delete dummy;
+        return head;
+    }
