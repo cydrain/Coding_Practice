@@ -46,29 +46,24 @@
 
 
 
+// solution 2
     int trap(int A[], int n) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
         int l = 0, r = n-1;
-        int i;
-        int water = 0;
+        int water = 0, i;
         while (l < r) {
             if (A[l] <= A[r]) {
-                i = l + 1;
-                while (A[i] < A[l]) {
+                for (i = l+1; i < r && A[i] <= A[l]; i++) {
                     water += A[l] - A[i];
-                    i++;
                 }
                 l = i;
             }
             else {
-                i = r - 1;
-                while (A[i] < A[r]) {
+                for (i = r-1; i > l && A[i] <= A[r]; i--) {
                     water += A[r] - A[i];
-                    i--;
                 }
                 r = i;
             }
         }
         return water;
     }
+

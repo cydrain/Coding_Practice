@@ -32,7 +32,7 @@
     void getNext(char *p, int next[]) {
         int p_len = strlen(p);
         int j = 0;
-        int k = -1;
+        int k = -1;     // K 就是最大前缀后缀值
         next[0] = -1;
         while (j < p_len-1) {
             if (k == -1 || p[k] == p[j]) {
