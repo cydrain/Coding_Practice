@@ -8,7 +8,7 @@ using namespace std;
 
 int findUgly(int idx) {
     if (idx == 1) return 1;
-    vector<int> ugly(idx+1, 1);
+    vector<int> ugly(idx, 1);
     int i;
     int m2idx, m3idx, m5idx;
 
