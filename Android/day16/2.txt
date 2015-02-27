@@ -1,0 +1,149 @@
+C++下对象序列化可以采用MFC下CArchive或者Boost库中的Serialization，但Boost序列化的性能较低，每秒1000次左右，本文将介绍一种自定义序列化方法，每秒50000次以上。
+
+采用字符数组存储成员变量的值，定义Load、Save接口提供给需要序列化的类进行实现。
+对于标准数据类型采用memcpy函数进行存取。
+
+
+序列化存储类，用以存储成员变量的值
+class ArchiveObject
+{
+public:
+    ArchiveObject(void);
+
+    ~ArchiveObject(void);
+
+    /* 序列化存储，字节数组 */     
+    char* Data;
+
+    /* 数据长度 */   
+    long DataLength;
+
+    /* 数据位置 */   
+    long DataPosition;
+
+    /* 标准数据类型存取 */   
+    void AddBool(bool data);
+
+    void GetBool(bool& data);
+
+    void AddLong(long data);
+
+    void GetLong(long& data);
+
+    void AddLongLong(long long data);
+
+    void GetLongLong(long long& data);
+
+    void AddDouble(double data);
+
+    void GetDouble(double& data);
+
+    void AddDateTime(SYSTEMTIME data);
+
+    void GetDateTime(SYSTEMTIME& data);
+
+    void AddDateTime(time_t data);
+
+    void GetDateTime(time_t& data);
+
+    /* 字符串存取 */  
+    void AddString(char* data);
+
+    void GetString(char*& data);
+};
+
+
+部分实现
+void ArchiveObject::AddLong(long data)
+{
+    Data=(char*)realloc(Data,DataLength+sizeof(long));      
+    memcpy(Data+DataLength,&data,sizeof(long));
+    DataLength=DataLength+sizeof(long);
+}
+
+void ArchiveObject::GetLong(long& data)
+{
+    memcpy(&data,Data+DataPosition,sizeof(long));
+    DataPosition=DataPosition+sizeof(long);
+}
+
+序列化接口类
+class SerializeObject
+{
+public:
+    SerializeObject(void);
+
+    ~SerializeObject(void);
+
+    /* 序列化校验标示，在数据头加标记，校验数据是否为序列化数据 */
+    long SerializeCheckId;
+
+    /* 序列化是否成功完成 */
+    bool IsSerializeOk;
+
+    /* 从序列化数据中初始化成员变量 */
+    virtual void Load(char*& data,long length)=0;
+
+    /* 将成员变量的值存储到字符数组中 */
+    virtual void Save(char*& data,long& length)=0;
+
+    /* 从文件中初始化成员变量 */
+    void LoadFromFile(char* fileName);
+
+    /* 将成员变量的值存储到文件中 */
+    void SaveToFile(char* fileName);
+
+};
+
+
+实现类
+class  MyClass : public SerializeObject
+{
+public:
+    MyClass(void);
+
+    ~ MyClass(void);
+
+    /* 进程编号 */
+    long ProcessId;
+
+    /* 创建时间*/
+    SYSTEMTIME CreationTime;        
+
+    /* 加载*/
+    void Load(char*& data,long length);
+
+    /* 存储*/
+    void Save(char*& data,long& length);
+};
+
+void MyClass::Load(char*& data,long length)
+{
+    ArchiveObject *pArchive=new ArchiveObject();
+
+    pArchive->Data=data;
+    pArchive->DataLength=length;
+
+    pArchive->GetLong(SerializeCheckId);
+    IsSerializeOk=(SerializeCheckId==SERIALIZE_CHECKID);
+
+    if(IsSerializeOk)
+    {
+        pArchive->GetLong(ProcessId);
+        pArchive->GetDateTime(CreationTime);
+    }
+    delete pArchive;
+}
+void MyClass::Save(char*& data,long& length)
+{
+    ArchiveObject *pArchive=new ArchiveObject();
+
+    pArchive->AddLong(SerializeCheckId);    
+    pArchive->AddLong(ProcessId);
+    pArchive->AddDateTime(CreationTime);
+
+    data=pArchive->Data;
+    length=pArchive->DataLength;
+
+    delete pArchive;
+}

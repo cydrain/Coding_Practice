@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<title><?php echo $title_for_layout; ?></title>
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" type="text/css" href="/css/flyontime.generic.css" />
+	<meta name="description" content="<?php if(isset($MetaDescription)) echo $MetaDescription; ?>"/>
+	<?php echo $scripts_for_layout; ?>
+</head>
+
+<body>
+		   <div style="background-color: black; color: white; font-family: Verdana; font-weight: bold; padding: 5px 1em 5px 5px" class="menubar">
+			<table border=0 cellpadding=0 cellspacing=0 width="100%">
+			<tr>
+				<td>
+					<a href="/"><span style="font-family: Trebuchet MS, Geneva, Helvetica, Tahoma, Arial; font-weight: bold"><span style="color: white;">Fly</span><span style="color: #B3CEE4">OnTime</span><span style="color: white;">.us</span></span></a>
+				</td>
+				<td style="text-align: right; ">
+					<a href="/about" style="color: white; font-weight: bold;">About</a>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="/statistics" style="color: white; font-weight: bold;">Statistics</a>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="/developers"i style="color: white; font-weight: bold;">Source/Data/API</a>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="/lines/security" style="color: white; font-weight: bold;">Airport Security</a>
+			</table>
+			</div>
+		
+			<table border=0 cellpadding=0 cellspacing=0 width="100%">
+			<tr valign="top">
+				<td align="left">
+					<div>
+						
+						<?php echo $content_for_layout; ?>
+						
+					</div>
+				</td>
+			</tr>
+			</table>
+			
+			<div style="margin-top: 2em; background-color: black; text-align: center; color: white; font-family: Verdana; font-weight: bold; padding: 3px; font-size: 80%" class="menubar">
+				<a href="/terms" style="color: white;">Terms of Use</a>
+			</div>
+			
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-9334607-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+
+</body>
+
+</html>

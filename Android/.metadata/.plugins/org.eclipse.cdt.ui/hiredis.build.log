@@ -1,0 +1,15 @@
+20:27:11 **** Build of configuration Default for project hiredis ****
+make all 
+cc -std=c99 -pedantic -c -O3 -fPIC  -Wall -W -Wstrict-prototypes -Wwrite-strings -g -ggdb  net.c
+cc -std=c99 -pedantic -c -O3 -fPIC  -Wall -W -Wstrict-prototypes -Wwrite-strings -g -ggdb  hiredis.c
+cc -std=c99 -pedantic -c -O3 -fPIC  -Wall -W -Wstrict-prototypes -Wwrite-strings -g -ggdb  sds.c
+cc -std=c99 -pedantic -c -O3 -fPIC  -Wall -W -Wstrict-prototypes -Wwrite-strings -g -ggdb  async.c
+cc -std=c99 -pedantic -c -O3 -fPIC  -Wall -W -Wstrict-prototypes -Wwrite-strings -g -ggdb  read.c
+cc -shared -Wl,-install_name,libhiredis.0.12.dylib -o libhiredis.dylib  net.o hiredis.o sds.o async.o read.o
+ar rcs libhiredis.a net.o hiredis.o sds.o async.o read.o
+cc -std=c99 -pedantic -c -O3 -fPIC  -Wall -W -Wstrict-prototypes -Wwrite-strings -g -ggdb  test.c
+cc -O3 -fPIC  -Wall -W -Wstrict-prototypes -Wwrite-strings -g -ggdb  -o hiredis-test   test.o libhiredis.a
+Generating hiredis.pc for pkgconfig...
+
+20:27:12 Build Finished (took 1s.356ms)
+

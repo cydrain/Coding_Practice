@@ -1,0 +1,14 @@
+package com.atguigu.exer;
+
+public class TestString {
+	public static void main(String[] args) {
+		String s = "ABC";
+		System.out.println(s);
+		System.out.println(s.charAt(1));
+		
+	}
+	
+	public String myTrim(String s) {
+		return null;
+	}
+}

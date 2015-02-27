@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;day16/C++_Object_Serialize.txt&apos; to &apos;1.txt&apos;" description="Rename resource &apos;C++_Object_Serialize.txt&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="C++_Object_Serialize.txt" name="1.txt" stamp="1423629192418" updateReferences="true"/>
+</session>

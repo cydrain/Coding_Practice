@@ -17,10 +17,11 @@ void reorderSortedArray(vector<int> &A, int start, int end) {
     int n = (end-start+1)/2;
     int k = n/2;
     if (k < 1) return;
+    cout << '(' << start+k << ',' << start+n << ',' << start+k+n << ')' << endl;
     reverse(A.begin()+start+k, A.begin()+start+n);
     reverse(A.begin()+start+n, A.begin()+start+n+k);
     reverse(A.begin()+start+k, A.begin()+start+n+k);
-    //printVector(A);
+    printVector(A);
     reorderSortedArray(A, start, start+2*k-1);
     reorderSortedArray(A, start+2*k, end);
 }
@@ -28,7 +29,10 @@ void reorderSortedArray(vector<int> &A, int start, int end) {
 int main(void) {
     int A[] = {0,2,4,6,8,1,3,5,7,9};
     vector<int> v(A,A+10);
+    printVector(v);
+    cout << endl;
     reorderSortedArray(v, 0, v.size()-1);
+    cout << endl;
     printVector(v);
     return 0;
 }

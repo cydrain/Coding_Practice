@@ -1,0 +1,65 @@
+package com.atguigu.exer;
+
+public class TestProduceConsumer {
+
+}
+
+class Clerk {
+	private int product;
+	
+	public synchronized void addProduct() {
+		if (product >= 10) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			product++;
+			System.out.println(Thread.currentThread().getName() + " produce No." + product);
+			notifyAll();
+		}
+	}
+	
+	public synchronized void consumeProduct() {
+		if (product <= 0) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			product--;
+			System.out.println(Thread.currentThread().getName() + " consume No." + product);
+			notifyAll();
+		}
+	}
+}
+
+class Producor implements Runnable {
+	private Clerk clerk;
+
+	public Producor(Clerk clerk) {
+		super();
+		this.clerk = clerk;
+	}
+	
+	public void run() {
+		this.clerk.addProduct();
+	}
+}
+
+class Consumor implements Runnable {
+	private Clerk clerk;
+
+	public Consumor(Clerk clerk) {
+		super();
+		this.clerk = clerk;
+	}
+	
+	public void run() {
+		this.clerk.consumeProduct();
+	}
+}

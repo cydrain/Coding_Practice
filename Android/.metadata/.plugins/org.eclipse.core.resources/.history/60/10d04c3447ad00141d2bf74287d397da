@@ -1,0 +1,32 @@
+package com.atguigu.exer;
+
+public class TestString {
+	public static void main(String[] args) {
+		String s = "ABC";
+		System.out.println(s);
+		System.out.println(myTrim("    ab* cd ef  "));
+		
+	}
+	
+	public String myTrim(String s) {
+		int start = 0, end = s.length()-1;
+		while (start <= end) {
+			if (s.charAt(start) == ' ') {
+				start++;
+			} else {
+				break;
+			}
+		}
+		while (end >= start) {
+			if (s.charAt(end) == ' ') {
+				end--;
+			} else {
+				break;
+			}
+		}
+		if (start <= end) {
+			return s.substring(start, end+1);
+		}
+		return null;
+	}
+}

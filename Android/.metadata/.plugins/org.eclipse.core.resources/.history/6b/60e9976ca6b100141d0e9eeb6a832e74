@@ -1,0 +1,20 @@
+package com.atguigu.exer;
+
+import java.io.*;
+
+import org.junit.Test;
+
+public class TestFileStream {
+	@Test
+	public void test() {
+		File file1 = new File("");
+		File file2 = new File("");
+		
+		FileInputStream fis = new FileInputStream(file1);
+		FileOutputStream fos = new FileOutputStream(file2);
+		
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		BufferedOutputStream bos = new BufferedOutputStream(fos);
+		
+	}
+}

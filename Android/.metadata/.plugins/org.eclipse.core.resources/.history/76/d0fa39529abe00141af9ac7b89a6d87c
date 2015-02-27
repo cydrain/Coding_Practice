@@ -1,0 +1,52 @@
+package com.atguigu.java;
+
+public class Roman {
+	public static void main(String[] args) {
+		String s = intToRoman(4);
+		System.out.println(s);
+	}
+    public static String intToRoman(int num) {
+        String m = "IVXLCDM";
+        StringBuilder str = new StringBuilder();
+        int digit, i = 0;
+        
+        while (num > 0) {
+            digit = num % 10;
+            num = num / 10;
+            String tmp = "";
+            switch (digit) {
+                case 3:
+                    tmp = m.charAt(i) + tmp;
+                case 2:
+                    tmp = m.charAt(i) + tmp;
+                case 1:
+                    tmp = m.charAt(i) + tmp;
+                    break;
+                case 4:
+                    tmp = m.charAt(i) + m.charAt(i+1) + tmp;
+                    break;
+                case 5:
+                    tmp = m.charAt(i+1) + tmp;
+                    break;
+                case 8:
+                    tmp = m.charAt(i) + tmp;
+                case 7:
+                    tmp = m.charAt(i) + tmp;
+                case 6:
+                    tmp = m.charAt(i+1) + m.charAt(i) + tmp;
+                    break;
+                case 9:
+                    tmp = m.charAt(i) + m.charAt(i+2) + tmp;
+                    break;
+                default:
+                    break;
+            }
+            str.insert(0, tmp);
+            i += 2;
+            System.out.println(tmp);
+            System.out.println(str);
+        }
+        
+        return str.toString();
+    }
+}
