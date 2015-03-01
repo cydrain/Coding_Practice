@@ -1,0 +1,22 @@
+package com.atguigu.exer;
+
+import java.net.InetAddress;
+import java.net.Socket;
+
+import org.junit.Test;
+import org.omg.CORBA.portable.OutputStream;
+
+public class TestTCP {
+	@Test
+	public void client() {
+		Socket socket = new Socket(InetAddress.getByName("127.0.0.1"), 9090);
+		OutputStream os = socket.getOutputStream();
+		
+		
+		os.write(b);
+	}
+	
+	@Test void server() {
+		
+	}
+}

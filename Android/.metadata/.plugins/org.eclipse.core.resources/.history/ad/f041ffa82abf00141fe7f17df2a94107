@@ -1,0 +1,60 @@
+package com.atguigu.exer;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Scanner;
+
+import org.junit.Test;
+
+public class TestTCP {
+	@Test
+	public void client() throws Exception {
+		Socket socket = new Socket(InetAddress.getByName("127.0.0.1"), 9090);
+		OutputStream os = socket.getOutputStream();
+		
+		System.out.println("Please input a string:");
+		Scanner scanner = new Scanner(System.in);
+		String str = scanner.next();
+		os.write(str.getBytes());
+		socket.shutdownOutput();
+		
+		InputStream is = socket.getInputStream();
+		byte[] b = new byte[20];
+		int len;
+		while ((len = is.read(b)) != -1) {
+			String str1 = new String(b, 0, len);
+			System.out.println(str1);
+		}
+		
+		is.close();
+		scanner.close();
+		os.close();
+		socket.close();
+	}
+	
+	@Test void server() {
+		ServerSocket ss = new ServerSocket(9090);
+		Socket s = ss.accept();
+		InputStream is = s.getInputStream();
+		byte[] b = new byte[20];
+		int len;
+		String str = null;
+		while ((len = is.read(b)) != -1) {
+			String str1 = new String(b, 0, len);
+			str += str1;
+		}
+		String strUpperCase = str.toUpperCase();
+		
+		OutputStream os = s.getOutputStream();
+		os.write(strUpperCase.getBytes());
+		
+		os.close();
+		is.close();
+		s.close();
+		ss.close();
+		
+	}
+}

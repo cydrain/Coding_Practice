@@ -1,0 +1,40 @@
+package com.atguigu.java;
+
+public class TestAnagrams {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+
+    public List<String> anagrams(String[] strs) {
+        Map<String,List<String>> map = new HashMap<>();
+        List<String> list = null;
+        List<String> res = new ArrayList<>();
+        String key = null;
+        for (int i = 0; i < strs.length; i++) {
+            byte[] b = strs[i].getBytes();
+            Arrays.sort(b);
+            key = b.toString();
+            list = map.get(key);
+            if (list == null) {
+                list = new ArrayList<>();
+                list.add(strs[i]);
+                map.put(key, list);
+            } else {
+                list.add(strs[i]);
+            }
+        }
+        
+        for (List<String> list1: map.values()) {
+            if (list1.size() > 1) {
+                for (String s: list1) {
+                    res.add(s);
+                }
+            }
+        }
+        return res;
+    
+	}
+}

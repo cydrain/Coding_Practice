@@ -1,0 +1,47 @@
+package com.atguigu.java;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+import org.junit.Test;
+
+public class TestTCP1 {
+	@Test
+	public void client() {
+		Socket socket = null;
+		OutputStream os = null;
+		try {
+			socket = new Socket(InetAddress.getByName("127.0.0.1"), 9090);
+			os = socket.getOutputStream();
+			os.write("I'm the client".getBytes());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (os != null) {
+				try {
+					os.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (socket != null) {
+				try {
+					socket.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	@Test
+	public void server() {
+		
+	}
+}

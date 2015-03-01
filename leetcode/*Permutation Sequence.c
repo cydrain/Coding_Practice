@@ -18,6 +18,7 @@
  *
  */
 
+/* C solution */
     string getPermutation(int n, int k) {
         // Start typing your C/C++ solution below
         // DO NOT write int main() function
@@ -39,3 +40,29 @@
         
         return r;
     }
+
+
+/* Java solution */
+public class Solution {
+    public String getPermutation(int n, int k) {
+        StringBuilder s = new StringBuilder();
+        StringBuilder r = new StringBuilder();
+        int[] factor = new int[n+1];
+        int i, index;
+        
+        factor[0] = 1;
+        for (i = 1; i <= n; i++) {
+            factor[i] = i * factor[i-1];
+            s.append((char)(i+'0'));
+        }
+        k--;
+        for (i = n-1; i >= 0; i--) {
+            index = k / factor[i];
+            k = k % factor[i];
+            r.append(s.charAt(index));
+            s.deleteCharAt(index);
+        }
+        return r.toString();
+    }
+}
+
