@@ -7,6 +7,7 @@
  *
  */
 
+/* C solution */
     int sqrt(int x) {
         // Start typing your C/C++ solution below
         // DO NOT write int main() function
@@ -46,3 +47,23 @@
         }
         return l;
     }
+
+
+/* Java solution */
+public class Solution {
+    public int sqrt(int x) {
+        if (x <= 1) return x;
+        int l = 1, r = x, m;
+        while (r-l > 1) {
+            m = l + (r-l)/2;
+            if (m == x/m) return m;
+            if (m < x/m) {
+                l = m;
+            } else {
+                r = m;
+            }
+        }
+        return l;
+    }
+}
+

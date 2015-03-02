@@ -9,6 +9,7 @@
  *
  */
 
+/* C solution */
     ListNode *rotateRight(ListNode *head, int k) {
         // Start typing your C/C++ solution below
         // DO NOT write int main() function
@@ -35,3 +36,37 @@
         
         return curr;
     }
+
+
+/* Java solution */
+public class Solution {
+    public ListNode rotateRight(ListNode head, int k) {
+        if (head == null || head.next == null) return head;
+        ListNode newhead = null, first = null, second = null;
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        int n = 0, i;
+        // get the list element count
+        first = dummy;
+        while (first.next != null) {
+            n++;
+            first = first.next;
+        }
+        k = k % n;
+        if (k == 0) return head;
+        
+        first = second = dummy;
+        for (i = 0; i < k; i++) {
+            second = second.next;
+        }
+        while (second.next != null) {
+            first = first.next;
+            second = second.next;
+        }
+        newhead = first.next;
+        first.next = null;
+        second.next = head;
+        return newhead;
+    }
+}
+

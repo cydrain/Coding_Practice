@@ -34,3 +34,20 @@
         }
         return c;
     }
+
+
+/* Java solution */
+public class Solution {
+    public int climbStairs(int n) {
+        if (n <= 2) return n;
+        int a = 1, b = 2, c = 0;
+        int i;
+        for (i = 3; i <= n; i++) {
+            c = a + b;
+            a = b;
+            b = c;
+        }
+        return c;
+    }
+}
+

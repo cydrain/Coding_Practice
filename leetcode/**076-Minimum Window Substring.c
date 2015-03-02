@@ -18,6 +18,7 @@
  *
  */
 
+/* C solution */
     string minWindow(string S, string T) {
         // Start typing your C/C++ solution below
         // DO NOT write int main() function
@@ -68,44 +69,44 @@
     }
 
 
-
-
-    string minWindow(string S, string T) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        vector<int> target(256, 0);
-        vector<int> src(256, 0);
-        int begin, end;
-        int n = T.size(), count = 0;
-        int minLen = INT_MAX, idx;
+/* Java solution */
+public class Solution {
+    public String minWindow(String S, String T) {
+        int slen = S.length();
+        int tlen = T.length();
+        if (slen < tlen) return "";
+        int[] target = new int[256];
+        int[] found = new int[256];
+        int i, start, end, count = 0;
+        int index = 0, minlen = slen;
         
-        for (int i = 0; i < n; i++) {
-            target[T[i]]++;
+        for (i = 0; i < tlen; i++) {
+            target[T.charAt(i)]++;
         }
-        for (begin = 0, end = 0; end < S.size(); end++) {
-            if (target[S[end]] == 0) continue;
-
-            src[S[end]]++;
-            if (src[S[end]] <= target[S[end]]) count++;
-            
-            if (count == n) {
-                while (target[S[begin]] == 0 || src[S[begin]] > target[S[begin]]) {
-                    if (src[S[begin]] > target[S[begin]]) {
-                        src[S[begin]]--;
+        for (start = 0, end = 0; end < slen; end++) {
+            if (target[S.charAt(end)] == 0) continue;
+            found[S.charAt(end)]++;
+            if (found[S.charAt(end)] <= target[S.charAt(end)]) {
+                count++;
+            }
+            if (count == tlen) {
+                while (target[S.charAt(start)] == 0 || found[S.charAt(start)] > target[S.charAt(start)]) {
+                    if (found[S.charAt(start)] > target[S.charAt(start)]) {
+                        found[S.charAt(start)]--;
                     }
-                    begin++;
+                    start++;
                 }
-                if (minLen > (end-begin+1)) {
-                    minLen = end-begin+1;
-                    idx = begin;
+                if (minlen > end-start+1) {
+                    minlen = end-start+1;
+                    index = start;
                 }
             }
         }
-        
-        if (minLen == INT_MAX) {
-            return string("");
-        }
-        else {
-            return S.substr(idx, minLen);
+        if (count == tlen) {
+            return S.substring(index, index+minlen);
+        } else {
+            return "";
         }
     }
+}
+

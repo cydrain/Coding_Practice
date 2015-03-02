@@ -13,6 +13,7 @@
  *
  */
 
+/* C solution */
     void sortColors(int A[], int n) {
         // Start typing your C/C++ solution below
         // DO NOT write int main() function
@@ -31,3 +32,31 @@
             }
         }
     }
+
+
+/* Java solution */
+public class Solution {
+    public void swap(int[] A, int i, int j) {
+        if (i == j) return;
+        int tmp = A[i];
+        A[i] = A[j];
+        A[j] = tmp;
+    }
+    public void sortColors(int[] A) {
+        int n = A.length;
+        int r = 0, b = n-1, i = 0;
+        while (i <= b) {
+            if (A[i] == 0) {
+                swap(A, r, i);
+                r++;
+                i++;
+            } else if (A[i] == 1) {
+                i++;
+            } else {
+                swap(A, b, i);
+                b--;
+            }
+        }
+    }
+}
+

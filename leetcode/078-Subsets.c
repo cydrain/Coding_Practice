@@ -23,6 +23,7 @@
  *
  */
 
+/* C solution */
     vector<vector<int> > subsets(vector<int> &S) {
         // Start typing your C/C++ solution below
         // DO NOT write int main() function
@@ -77,3 +78,29 @@
         subsets(S, 0, path, r);
         return r;
     }
+
+
+/* Java solution */
+public class Solution {
+    public List<List<Integer>> subsets(int[] S) {
+        List<List<Integer>> r = new ArrayList<>();
+        r.add(new ArrayList<Integer>());
+        int n = S.length;
+        int i, j;
+        
+        Arrays.sort(S);
+        for (i = 0; i < n; i++) {
+            for (j = r.size()-1; j >= 0; j--) {
+                List<Integer> src = r.get(j);
+                List<Integer> dst = new ArrayList<>();
+                for (Integer num: src) {
+                    dst.add(num);
+                }
+                dst.add(S[i]);
+                r.add(dst);
+            }
+        }
+        return r;
+    }
+}
+

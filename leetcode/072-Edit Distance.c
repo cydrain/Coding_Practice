@@ -11,6 +11,7 @@
  *
  */
 
+/* C solution */
     int minDistance(string word1, string word2) {
         // Start typing your C/C++ solution below
         // DO NOT write int main() function
@@ -43,3 +44,36 @@
         }
         return dp[len1][len2];
     }
+
+
+/* Java solution */
+public class Solution {
+    // if s1[i] == s2[j], dp[i][j] = min{dp[i-1][j-1], dp[i-1][j]+1, dp[i][j-1]+1}
+    // if s1[i] != s2[j], dp[i][j] = min{dp[i-1][j-1], dp[i-1][j], dp[i][j-1]} + 1
+    public int minDistance(String word1, String word2) {
+        int len1 = word1.length();
+        int len2 = word2.length();
+        String s1 = "#" + word1;
+        String s2 = "#" + word2;
+        int[][] dp = new int[len1+1][len2+1];
+        int i, j;
+        for (i = 1; i <= len1; i++) {
+            dp[i][0] = i;
+        }
+        for (j = 1; j <= len2; j++) {
+            dp[0][j] = j;
+        }
+        for (i = 1; i <= len1; i++) {
+            for (j = 1; j <= len2; j++) {
+                dp[i][j] = Math.min(dp[i-1][j], dp[i][j-1]) + 1;
+                if (s1.charAt(i) == s2.charAt(j)) {
+                    dp[i][j] = Math.min(dp[i][j], dp[i-1][j-1]);
+                } else {
+                    dp[i][j] = Math.min(dp[i][j], dp[i-1][j-1]+1);
+                }
+            }
+        }
+        return dp[len1][len2];
+    }
+}
+

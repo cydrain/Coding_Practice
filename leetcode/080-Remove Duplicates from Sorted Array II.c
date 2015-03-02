@@ -11,6 +11,7 @@
  *
  */
 
+/* C solution */
     int removeDuplicates(int A[], int n) {
         // Start typing your C/C++ solution below
         // DO NOT write int main() function
@@ -25,3 +26,20 @@
         
         return p+1;
     }
+
+
+/* Java solution */
+public class Solution {
+    public int removeDuplicates(int[] A) {
+        int n = A.length;
+        if (n <= 2) return n;
+        int p = 1, i;
+        for (i = 2; i < n; i++) {
+            if (A[i] != A[p] || A[i] != A[p-1]) {
+                A[++p] = A[i];
+            }
+        }
+        return p+1;
+    }
+}
+

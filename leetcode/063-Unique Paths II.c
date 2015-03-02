@@ -23,6 +23,7 @@
  *
  */
 
+/* C solution */
     int uniquePathsWithObstacles(vector<vector<int> > &obs) {
         // Start typing your C/C++ solution below
         // DO NOT write int main() function
@@ -47,3 +48,29 @@
         
         return dp[0][0];
     }
+
+
+/* Java solution */
+public class Solution {
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        int[][] grid = new int[m][n];
+        int i, j;
+        
+        grid[m-1][n-1] = (obstacleGrid[m-1][n-1] == 1) ? 0 : 1;
+        for (i = m-2; i >= 0; i--) {
+            grid[i][n-1] = (obstacleGrid[i][n-1] == 1) ? 0 : grid[i+1][n-1];
+        }
+        for (j = n-2; j >= 0; j--) {
+            grid[m-1][j] = (obstacleGrid[m-1][j] == 1) ? 0 : grid[m-1][j+1];
+        }
+        for (i = m-2; i >= 0; i--) {
+            for (j = n-2; j >= 0; j--) {
+                grid[i][j] = (obstacleGrid[i][j] == 1) ? 0 : grid[i+1][j] + grid[i][j+1];
+            }
+        }
+        return grid[0][0];
+    }
+}
+
