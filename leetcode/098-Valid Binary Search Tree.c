@@ -11,6 +11,7 @@
  *
  */
 
+/* C solution */
     bool isValidBST(TreeNode *root, int minval, int maxval) {
         if (!root) return true;
         return (root->val > minval && root->val < maxval &&
@@ -22,3 +23,25 @@
         // DO NOT write int main() function
         return isValidBST(root, INT_MIN, INT_MAX);
     }
+
+
+/* Java solution */
+public class Solution {
+    public void inOrderTraversal(TreeNode root, List<Integer> v) {
+        if (root == null) return;
+        inOrderTraversal(root.left, v);
+        v.add(root.val);
+        inOrderTraversal(root.right, v);
+    }
+    public boolean isValidBST(TreeNode root) {
+        List<Integer> v = new ArrayList<>();
+        inOrderTraversal(root, v);
+        for (int i = 1; i < v.size(); i++) {
+            if (v.get(i-1) >= v.get(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+

@@ -13,6 +13,7 @@
  *
  */
 
+/* C solution */
     ListNode *partition(ListNode *head, int x) {
         // Start typing your C/C++ solution below
         // DO NOT write int main() function
@@ -56,3 +57,42 @@
             return l_head;
         }
     }
+
+
+/* Java solution */
+public class Solution {
+    public ListNode partition(ListNode head, int x) {
+        if (head == null || head.next == null) return head;
+        ListNode lh = null, lt = null, rh = null, rt = null;
+        ListNode node = null;
+        while (head != null) {
+            node = head;
+            head = head.next;
+            node.next = null;
+            
+            if (node.val < x) {
+                if (lh == null) {
+                    lh = lt = node;
+                } else {
+                    lt.next = node;
+                    lt = node;
+                }
+            } else {
+                if (rh == null) {
+                    rh = rt = node;
+                } else {
+                    rt.next = node;
+                    rt = node;
+                }
+            }
+        }
+        
+        if (lh != null) {
+            lt.next = rh;
+            return lh;
+        } else {
+            return rh;
+        }
+    }
+}
+

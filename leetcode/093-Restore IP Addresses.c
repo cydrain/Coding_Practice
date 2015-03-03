@@ -11,6 +11,7 @@
  *
  */
 
+/* C solution */
     void restoreIpAddresses(string s, int start, int level,
                             string ip, vector<string> &result) {
         int n = s.size();
@@ -39,3 +40,32 @@
         restoreIpAddresses(s, 0, 0, "", r);
         return r;
     }
+
+
+/* Java solution */
+public class Solution {
+    public void restoreIpAddrHelper(String s, int n, int start, String p, List<String> r) {
+        int len = s.length();
+        int num = 0, i;
+        if (n == 4 && start == len) {
+            r.add(p.substring(0, p.length()-1));
+            return;
+        }
+        if ((len-start) > (4-n)*3) return;
+        if ((len-start) < (4-n)) return;
+        
+        for (i = 0; i < 3 && start+i < len; i++) {
+            num = num*10 + (s.charAt(start+i)-'0');
+            if (i > 0 && num < 10) break;
+            if (num > 255) break;
+            restoreIpAddrHelper(s, n+1, start+i+1, p+num+".", r);
+        }
+    }
+    public List<String> restoreIpAddresses(String s) {
+        List<String> r = new ArrayList<>();
+        if (s.equals("")) return r;
+        restoreIpAddrHelper(s, 0, 0, "", r);
+        return r;
+    }
+}
+

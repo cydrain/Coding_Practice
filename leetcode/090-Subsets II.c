@@ -22,6 +22,7 @@
  * 
  */
 
+/* C solution */
     void subsets(vector<int> &S, int start, vector<int> &path, vector<vector<int> > &result) {
         result.push_back(path);
         
@@ -44,3 +45,29 @@
         subsets(S, 0, path, r);
         return r;
     }
+
+
+/* Java solution */
+public class Solution {
+    public void subsetsWithDupHelper(int[] num, int start, List<Integer> p, List<List<Integer>> r) {
+        List<Integer> list = new ArrayList<>();
+        for (Integer i: p) {
+            list.add(i);
+        }
+        r.add(list);
+        for (int i = start; i < num.length; i++) {
+            if (i > start && num[i] == num[i-1]) continue;
+            p.add(num[i]);
+            subsetsWithDupHelper(num, i+1, p, r);
+            p.remove(p.size()-1);
+        }
+    }
+    public List<List<Integer>> subsetsWithDup(int[] num) {
+        List<List<Integer>> r = new ArrayList<>();
+        List<Integer> p = new ArrayList<>();
+        Arrays.sort(num);
+        subsetsWithDupHelper(num, 0, p, r);
+        return r;
+    }
+}
+

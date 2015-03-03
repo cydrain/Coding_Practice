@@ -26,6 +26,7 @@
  *
  */
 
+/* C solution */
     vector<int> grayCode(int n) {
         // Start typing your C/C++ solution below
         // DO NOT write int main() function
@@ -38,16 +39,29 @@
 
 
 
-
-
 vector<int> grayCode(int n) {
     vector<int> r(1, 0);
     for(int i = 0; i < n; ++i) {
-        for(int j = r.size() - 1; j >= 0; --j) {
-            r.push_back(r[j] | 1 << i);
+        for(int j = r.size()-1; j >= 0; --j) {
+            r.push_back(r[j] | (1<<i));
         }
     }
     return r;
 }
 
+
+/* Java solution */
+public class Solution {
+    public List<Integer> grayCode(int n) {
+        List<Integer> r = new ArrayList<>();
+        r.add(0);
+        int i, j;
+        for (i = 0; i < n; i++) {
+            for (j = r.size()-1; j >= 0; j--) {
+                r.add(r.get(j) | (1<<i));
+            }
+        }
+        return r;
+    }
+}
 

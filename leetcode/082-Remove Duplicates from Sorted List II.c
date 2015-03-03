@@ -46,7 +46,6 @@
 
 
 
-
     ListNode *deleteDuplicates(ListNode *head) {
         // Note: The Solution object is instantiated only once and is reused by each test case.
         if (!head || !head->next) return head;
@@ -77,3 +76,27 @@
         delete dummy;
         return head;
     }
+
+
+/* Java solution */
+public class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        if (head == null || head.next == null) return head;
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode prev = dummy, node = null;
+        while (prev.next != null && prev.next.next != null) {
+            if (prev.next.val != prev.next.next.val) {
+                prev = prev.next;
+            } else {
+                node = prev.next.next;
+                while (node.next != null && node.next.val == prev.next.val) {
+                    node = node.next;
+                }
+                prev.next = node.next;
+            }
+        }
+        return dummy.next;
+    }
+}
+

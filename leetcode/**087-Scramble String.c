@@ -45,6 +45,7 @@
  *
  */
 
+/* C solution */
     bool isScramble(string s1, string s2) {
         // Start typing your C/C++ solution below
         // DO NOT write int main() function
@@ -77,3 +78,34 @@
         
         return dp[0][0][len];
     }
+
+
+/* Java solution */
+public class Solution {
+    // let dp[i][j][m] means s1[i:i+m) and s2[j:j+m) is scrambled string
+    // so dp[i][j][m] = (dp[i][j][k] && dp[i+k][j+k][m-k]) ||
+    //                  (dp[i][j+m-k][k] && dp[i+k][j][m-k])   for (1<=k<m)
+    public boolean isScramble(String s1, String s2) {
+        int n = s1.length();
+        boolean[][][] dp = new boolean[n][n][n+1];
+        int i, j, m, k;
+        for (i = 0; i < n; i++) {
+            for (j = 0; j < n; j++) {
+                dp[i][j][1] = (s1.charAt(i) == s2.charAt(j));
+            }
+        }
+        for (m = 2; m <= n; m++) {
+            for (i = 0; i+m <= n; i++) {
+                for (j = 0; j+m <= n; j++) {
+                    for (k = 1; k < m; k++) {
+                        dp[i][j][m] = ((dp[i][j][k] && dp[i+k][j+k][m-k]) ||
+                                       (dp[i][j+m-k][k] && dp[i+k][j][m-k]));
+                        if (dp[i][j][m]) break;
+                    }
+                }
+            }
+        }
+        return dp[0][0][n];
+    }
+}
+

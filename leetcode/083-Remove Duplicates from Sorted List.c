@@ -10,6 +10,7 @@
  *
  */
 
+/* C solution */
     ListNode *deleteDuplicates(ListNode *head) {
         // Start typing your C/C++ solution below
         // DO NOT write int main() function
@@ -26,3 +27,22 @@
         }
         return head;
     }
+
+
+/* Java solution */
+public class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        if (head == null || head.next == null) return head;
+        ListNode first = head, second = null;
+        while (first.next != null) {
+            second = first.next;
+            if (first.val == second.val) {
+                first.next = second.next;
+            } else {
+                first = second;
+            }
+        }
+        return head;
+    }
+}
+

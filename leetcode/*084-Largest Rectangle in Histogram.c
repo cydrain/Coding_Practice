@@ -11,6 +11,7 @@
  *
  */
 
+/* C solution */
     int largestRectangleArea(vector<int> &h) {
         // Start typing your C/C++ solution below
         // DO NOT write int main() function
@@ -31,3 +32,30 @@
         }
         return m;
     }
+
+
+/* Java solution */
+public class Solution {
+    public int largestRectangleArea(int[] height) {
+        int n = height.length;
+        int[] h = new int[n+1];
+        Stack<Integer> s = new Stack<>();
+        int i, t, area = 0;
+        for (i = 0; i < n; i++) {
+            h[i] = height[i];
+        }
+        h[n] = 0;
+        
+        i = 0;
+        while (i <= n) {
+            if (s.empty() || h[i] >= h[s.peek()]) {
+                s.push(i++);
+            } else {
+                t = s.pop();
+                area = Math.max(area, h[t]*(s.empty() ? i : (i-s.peek()-1)));
+            }
+        }
+        return area;
+    }
+}
+

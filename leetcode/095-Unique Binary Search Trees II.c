@@ -15,6 +15,7 @@
  *
  */
 
+/* C solution */
     vector<TreeNode *> generateTrees(int start, int end) {
         vector<TreeNode*> result;
         vector<TreeNode*> leftTrees;
@@ -47,3 +48,34 @@
         // DO NOT write int main() function
         return generateTrees(1, n);
     }
+
+
+/* Java solution */
+public class Solution {
+    public List<TreeNode> generateTreesHelper(int start, int end) {
+        List<TreeNode> r = new ArrayList<>();
+        if (start > end) {
+            r.add(null);
+            return r;
+        } else {
+            int i, j, k;
+            for (i = start; i <= end; i++) {
+                List<TreeNode> lt = generateTreesHelper(start, i-1);
+                List<TreeNode> rt = generateTreesHelper(i+1, end);
+                for (j = 0; j < lt.size(); j++) {
+                    for (k = 0; k < rt.size(); k++) {
+                        TreeNode root = new TreeNode(i);
+                        root.left = lt.get(j);
+                        root.right = rt.get(k);
+                        r.add(root);
+                    }
+                }
+            }
+            return r;
+        }
+    }
+    public List<TreeNode> generateTrees(int n) {
+        return generateTreesHelper(1, n);
+    }
+}
+

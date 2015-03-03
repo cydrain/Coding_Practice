@@ -14,6 +14,7 @@
  *
  */
 
+/* C solution */
     ListNode *reverseBetween(ListNode *head, int m, int n) {
         // Start typing your C/C++ solution below
         // DO NOT write int main() function
@@ -37,7 +38,6 @@
         delete dummy;
         return head;
     }
-
 
 
 
@@ -66,4 +66,27 @@
         delete dummy;
         return head;
     }
+
+
+/* Java solution */
+public class Solution {
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        if (head == null || head.next == null) return head;
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode prev = dummy, curr = head, node = null;
+        int i;
+        for (i = 1; i < m; i++) {
+            prev = curr;
+            curr = curr.next;
+        }
+        for (i = m; i < n; i++) {
+            node = curr.next;
+            curr.next = node.next;
+            node.next = prev.next;
+            prev.next = node;
+        }
+        return dummy.next;
+    }
+}
 

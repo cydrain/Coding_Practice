@@ -110,3 +110,37 @@ bool isInterleave(string s1, string s2, string s3) {
         return dp[len2];
     }
 
+
+/* Java solution */
+public class Solution {
+    // let dp[i][j] means whether ss1[1:i] and ss2[1:j] can form ss3[1:i+j]
+    // so if (ss1[i] == ss3[i+j]), dp[i][j] = dp[i-1][j];
+    //    if (ss2[j] == ss3[i+j]), dp[i][j] = pd[i][j-1].
+    public boolean isInterleave(String s1, String s2, String s3) {
+        int len1 = s1.length();
+        int len2 = s2.length();
+        int len3 = s3.length();
+        if (len1 + len2 != len3) return false;
+        String ss1 = "#" + s1;
+        String ss2 = "#" + s2;
+        String ss3 = "#" + s3;
+        boolean[][] dp = new boolean[len1+1][len2+1];
+        int i, j;
+        
+        dp[0][0] = true;
+        for (i = 1; i <= len1; i++) {
+            dp[i][0] = (ss1.charAt(i) == ss3.charAt(i) ? dp[i-1][0] : false);
+        }
+        for (j = 1; j <= len2; j++) {
+            dp[0][j] = (ss2.charAt(j) == ss3.charAt(j) ? dp[0][j-1] : false);
+        }
+        for (i = 1; i <= len1; i++) {
+            for (j = 1; j <= len2; j++) {
+                dp[i][j] = ((ss1.charAt(i) == ss3.charAt(i+j) && dp[i-1][j]) ||
+                            (ss2.charAt(j) == ss3.charAt(i+j) && dp[i][j-1]));
+            }
+        }
+        return dp[len1][len2];
+    }
+}
+

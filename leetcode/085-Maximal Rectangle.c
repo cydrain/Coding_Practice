@@ -6,6 +6,7 @@
  *
  */
 
+/* C solution */
     int maxHistogram(vector<int> &h) {
         stack<int> s;
         int i = 0, t;
@@ -44,3 +45,43 @@
         }
         return area;
     }
+
+
+/* Java solution */
+public class Solution {
+    public int maximalRectangleHelper(int[] h) {
+        int n = h.length;
+        int i = 0, t, area = 0;
+        Stack<Integer> s = new Stack<>();
+        while (i < n) {
+            if (s.empty() || h[i] >= h[s.peek()]) {
+                s.push(i++);
+            } else {
+                t = s.pop();
+                area = Math.max(area, h[t] * (s.empty() ? i : (i-s.peek()-1)));
+            }
+        }
+        return area;
+    }
+    public int maximalRectangle(char[][] matrix) {
+        int m = matrix.length;
+        if (m == 0) return 0;
+        int n = matrix[0].length;
+        int[][] mx = new int[m][n+1];
+        int i, j, area = 0;
+        for (i = m-1; i >= 0; i--) {
+            for (j = 0; j < n; j++) {
+                if (i == m-1) {
+                    mx[i][j] = (matrix[i][j] == '0') ? 0 : 1;
+                } else {
+                    mx[i][j] = (matrix[i][j] == '0') ? 0 : mx[i+1][j] + 1;
+                }
+            }
+        }
+        for (i = 0; i < m; i++) {
+            area = Math.max(area, maximalRectangleHelper(mx[i]));
+        }
+        return area;
+    }
+}
+
