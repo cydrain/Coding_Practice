@@ -18,57 +18,46 @@
  *
  */
 
-/* C solution */
-    int search(vector<int> &num, int target) {
-        int n = num.size();
-        int i;
-        for (i = 0; i < n; i++) {
-            if (num[i] == target) {
-                return i+1;
-            }
-        }
-    }
-    int rev_search(vector<int> &num, int target) {
-        int n = num.size();
-        int i;
-        for (i = n-1; i >= 0; i--) {
-            if (num[i] == target) {
-                return i+1;
-            }
-        }
-    }
-    vector<int> twoSum(vector<int> &numbers, int target) {
-        int n = numbers.size();
-        int l = 0, r = n-1, sum;
-        vector<int> num(numbers);
-        int num1, num2;
-        vector<int> result(2, -1);
+/* C++ solution */
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        vector<int> n(nums);
+        vector<int> r(2, -1);
+        int len = nums.size();
+        int i = 0, j = len-1;
+        int sum, n1, n2;
         
-        sort(num.begin(), num.end());
-        while (l < r) {
-            sum = num[l] + num[r];
+        sort(n.begin(), n.end());
+        while (i < j) {
+            sum = n[i] + n[j];
             if (sum == target) {
-                num1 = num[l];
-                num2 = num[r];
+                n1 = n[i];
+                n2 = n[j];
+                break;
+            } else if (sum < target) {
+                i++;
+            } else {
+                j--;
+            }
+        }
+        
+        for (i = 0; i < len; i++) {
+            if (n1 == nums[i]) {
+                r[0] = i;
                 break;
             }
-            if (sum < target) {
-                l++;
-            }
-            else {
-                r--;
+        }
+        for (i = len-1; i >= 0; i--) {
+            if (n2 == nums[i]) {
+                r[1] = i;
+                break;
             }
         }
         
-        result[0] = search(numbers, num1);
-        result[1] = rev_search(numbers, num2);
-        
-        if (result[0] > result[1]) {
-            swap(result[0], result[1]);
-        }
-        
-        return result;
+        return r;
     }
+};
 
 
 /* Java solution */
