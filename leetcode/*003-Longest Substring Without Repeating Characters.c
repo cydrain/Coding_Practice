@@ -43,7 +43,7 @@
         vector<int> idx(256, -1);
         int maxlen = 0, start = -1;
         for (int i = 0; i < s.length(); i++) {
-            if (idx[s[i]] != -1) {
+            if (idx[s[i]] != -1) {      // this check can be removed
                 start = max(start, idx[s[i]]);
             }
             maxlen = max(maxlen, i-start);
