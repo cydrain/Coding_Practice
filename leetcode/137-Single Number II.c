@@ -9,6 +9,23 @@
  * it without using extra memory? 
  *
  */
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        // s2 s1   c   =>  s2 s1 / s2 s1
+        //  0  0  0/1       0  0 /  0  1  
+        //  0  1  0/1       0  1 /  1  0
+        //  1  0  0/1       1  0 /  0  0
+        int n = nums.size();
+        int s1 = 0, s2 = 0, i, tmp;
+        for (i = 0; i < n; i++) {
+            tmp = (~s2 & ~s1 & nums[i]) | (~s2 & s1 & ~nums[i]);
+            s2 = (~s2 & s1 & nums[i]) | (s2 & ~s1 & ~nums[i]);
+            s1 = tmp;
+        }
+        return s1|s2;
+    }
+};
 
     int singleNumber(int A[], int n) {
         int bit_count[32] = {0};
