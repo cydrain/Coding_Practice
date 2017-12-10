@@ -45,7 +45,7 @@ int server::initServer()
 
     sock_serv = socket(AF_INET, SOCK_STREAM, 0);
     if (sock_serv < 0) {
-        printf("create socket error: %s(errno: %d)", strerror(errno), errno);
+        printf("create socket error: %s(errno: %d)\n", strerror(errno), errno);
         return -1;
     }
 
@@ -53,8 +53,8 @@ int server::initServer()
     // allow socket re-use a server address if it has been binded
     setsockopt(sock_serv, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
     
-    if ((bind(sock_serv, (struct sockaddr*)&server_addr, sizeof(server_addr))) == -1) {
-        printf("bind socket error: %s(errno: %d)", strerror(errno), errno);
+    if (bind(sock_serv, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
+        printf("bind socket error: %s(errno: %d)\n", strerror(errno), errno);
         close(sock_serv);
         return -1;
     }
@@ -72,8 +72,8 @@ void server::startListen()
     int i, n;
     const char *p;
 
-    if ((listen(sock_serv, 5)) == -1) {
-        printf("listen socket error: %s(errno: %d)", strerror(errno), errno);
+    if (listen(sock_serv, 5) == -1) {
+        printf("listen socket error: %s(errno: %d)\n", strerror(errno), errno);
         close(sock_serv);
         return;
     }
@@ -84,17 +84,17 @@ void server::startListen()
 
         cliaddr_len = sizeof(cliaddr);
         if ((sock_client = accept(sock_serv, (struct sockaddr*)&cliaddr, &cliaddr_len)) == -1) {
-            printf("accept socket error: %s(errno: %d)", strerror(errno), errno);
+            printf("accept socket error: %s(errno: %d)\n", strerror(errno), errno);
             continue;
         }
 
-        strcpy(buf, "This is server! welcome!\n");
+        strcpy(buf, "This is server! Welcome!\n");
         send(sock_client, buf, MAXLINE, 0);
 
         while (1) {
             bzero(buf, sizeof(buf));
             if ((n = recv(sock_client, buf, MAXLINE, 0)) == -1) {
-                printf("read error: %s(errno: %d)", strerror(errno), errno);
+                printf("read error: %s(errno: %d)\n", strerror(errno), errno);
                 close(sock_serv);
                 return;
             }

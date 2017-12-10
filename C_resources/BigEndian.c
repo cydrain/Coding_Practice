@@ -26,10 +26,10 @@ int main()
     unsigned int a = 0x11223344;
     unsigned char *c;
 
-    c = &a;
+    c = (unsigned char*)&a;
 
-    printf("\naddress of a: 0x%x, value = 0x%x", &a, a);
-    printf("\naddress of c: 0x%x, value = 0x%x, 0x%x, 0x%x, 0x%x",
+    printf("\naddress of a: %p, value = 0x%x", &a, a);
+    printf("\naddress of c: %p, value = 0x%x, 0x%x, 0x%x, 0x%x",
            c, *c, *(c+1), *(c+2), *(c+3));
     if (*c == 0x11) {
         printf("\nThis is big endian.\n");

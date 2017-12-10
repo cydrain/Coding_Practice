@@ -1,3 +1,9 @@
+/* 
+ * 统计从1到n的所有自然数中‘1’出现的次数。
+ * 例如 n = 12 (1,2,3,4,5,6,7,8,9,10,11,12)
+ * ‘1’一共出现5次
+ */
+
 #include <stdio.h>
 
 unsigned long long sum1s(unsigned long long n)

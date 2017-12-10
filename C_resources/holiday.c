@@ -55,78 +55,47 @@ void printEvtOcr(vector<EvtOcr*> v) {
     }
 }
 
-bool lessThan(EvtOcr *e1, EvtOcr *e2) {
-    if (e1->endDate < e2->endDate) {
-        return true;
-    }
-    else if (e1->endDate > e2->endDate) {
-        return false;
-    }
-    else {
-        if (e1->startDate < e2->startDate) {
-            return true;
-        }
-        else if (e1->startDate > e2->startDate) {
-            return false;
-        }
-    }
-    return false;
-}
-
-EvtOcr* createEvtOcr(int start, int end, int type) {
-    if (start >= end) return NULL;
-    return (new EvtOcr(start, end, type));
-}
-
-void merge2EvtOcr(EvtOcr *e1, EvtOcr *e2, vector<EvtOcr*> &res) {
-    EvtOcr *newEvt;
-    if (e1->startDate == e1->endDate) return;
-    if (e1->endDate <= e2->startDate) {
-        res.push_back(e1);
-        return;
-    }
-
-    if (e1->startDate < e2->startDate) {
-        newEvt = createEvtOcr(e1->startDate, e2->startDate, e1->type);
-        res.push_back(newEvt);
-        e1->startDate = e2->startDate;
-    }
-    else if (e1->startDate > e2->startDate) {
-        newEvt = createEvtOcr(e2->startDate, e1->startDate, e2->type);
-        res.push_back(newEvt);
-        e2->startDate = e1->startDate;
-    }
-
-    e1->type |= e2->type;
-    res.push_back(e1);
-    e2->startDate = e1->endDate;
-    return;
-}
-
 void merge(vector<EvtOcr*> &nominal, vector<EvtOcr*> &observed, vector<EvtOcr*> &res) {
-    vector<EvtOcr*> total;
-    int i = 0, j = 0;
-    while (i < nominal.size() && j < observed.size()) {
-        if (lessThan(nominal[i], observed[j])) {
-            total.push_back(nominal[i++]);
+    int i;
+    while (nominal.size() && observed.size()) {
+        if (nominal[0]->endDate < observed[0]->startDate) {
+            res.push_back(nominal[0]);
+            nominal.erase(nominal.begin());
+        } else if (observed[0]->endDate < nominal[0]->startDate) {
+            res.push_back(observed[0]);
+            observed.erase(observed.begin());
+        } else {
+            if (nominal[0]->startDate < observed[0]->startDate) {
+                res.push_back(new EvtOcr(nominal[0]->startDate, observed[0]->startDate-1, nominal[0]->type));
+                nominal[0]->startDate = observed[0]->startDate;
+            } else if (observed[0]->startDate < nominal[0]->startDate) {
+                res.push_back(new EvtOcr(observed[0]->startDate, nominal[0]->startDate-1, observed[0]->type));
+                observed[0]->startDate = nominal[0]->startDate;
+            } else {
+                if (nominal[0]->endDate < observed[0]->endDate) {
+                    nominal[0]->type |= OBS;
+                    res.push_back(nominal[0]);
+                    observed[0]->startDate = nominal[0]->endDate + 1;
+                    nominal.erase(nominal.begin());
+                } else if (observed[0]->endDate < nominal[0]->endDate) {
+                    observed[0]->type |= NOM;
+                    res.push_back(observed[0]);
+                    nominal[0]->startDate = observed[0]->endDate + 1;
+                    observed.erase(observed.begin());
+                } else {
+                    nominal[0]->type |= OBS;
+                    res.push_back(nominal[0]);
+                    nominal.erase(nominal.begin());
+                    observed.erase(observed.begin());
+                }
+            }
         }
-        else {
-            total.push_back(observed[j++]);
-        }
     }
-    while (i < nominal.size()) {
-        total.push_back(nominal[i++]);
+    for (i = 0; i < nominal.size(); i++) {
+        res.push_back(nominal[i]);
     }
-    while (j < observed.size()) {
-        total.push_back(observed[j++]);
-    }
-
-    for (i = 1; i < total.size(); i++) {
-        merge2EvtOcr(total[i-1], total[i], res);
-    }
-    i--;
-    if (total[i]->startDate != total[i]->endDate) {
-        res.push_back(total[i]);
+    for (i = 0; i < observed.size(); i++) {
+        res.push_back(observed[i]);
     }
 }
 

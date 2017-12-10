@@ -7,24 +7,20 @@
  */
 
 /* C solution */
-class Solution {
-public:
-    string longestCommonPrefix(vector<string>& strs) {
+    string longestCommonPrefix(vector<string> &strs) {
+        if (strs.empty()) return "";
         int n = strs.size();
-        if (n == 0) return "";
-        if (n == 1) return strs[0];
+        int len = strs[0].length();
         int i, j;
-        
-        for (i = 0; i < strs[0].length(); i++) {
+        for (i = 0; i < len; i++) {
             for (j = 1; j < n; j++) {
-                if (strs[j].length() <= i || strs[j][i] != strs[0][i]) {
+                if (strs[j][i] != strs[0][i]) {
                     return strs[0].substr(0, i);
                 }
             }
         }
         return strs[0];
     }
-};
 
 
 /* Java solution */
