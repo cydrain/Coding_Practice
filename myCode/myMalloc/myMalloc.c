@@ -28,7 +28,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 #define MEM_SIZE    10240
 #define NODE_NUM    100
@@ -101,7 +101,7 @@ void* myMalloc(size_t size)
         }
     }
 
-    printf("Cannot find enough memory piece %d!\n", size);
+    printf("Cannot find enough memory piece %d!\n", (int)size);
     //showMemNode();
 
     return NULL;

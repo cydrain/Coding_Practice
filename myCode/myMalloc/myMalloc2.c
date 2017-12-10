@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <assert.h>
 
 typedef unsigned long ulong;
@@ -70,7 +70,7 @@ void mem_node_append(mem_node* node, mem_node* head, mem_node* tail)
 mem_pool* mem_pool_init(int node_size, int node_num)
 {
     mem_pool* pool = NULL;
-    mem_node* node_array = NULL;
+    mem_node* node = NULL;
     int i;
 
     pool = (mem_pool*)malloc(sizeof(mem_pool));
@@ -101,10 +101,12 @@ mem_pool* mem_pool_init(int node_size, int node_num)
     pool->used_head.index = -1;
     pool->used_tail.index = -1;
 
-    node_array = (mem_node*)pool->data_addr;
+    node = (mem_node*)pool->data_addr;
     for (i = 0; i < node_num; i++) {
-        node_array[i].index = i;
-        mem_node_append(&node_array[i], &pool->avail_head, &pool->avail_tail);
+        node->used = 0;
+        node->index = i;
+        mem_node_append(node, &pool->avail_head, &pool->avail_tail);
+        node = (mem_node*)((ulong)node + sizeof(mem_node) + node_size);
     }
 
     return pool;
@@ -188,7 +190,7 @@ void* myMalloc(size_t size)
 
     pool = get_mem_pool_by_size(size);
     if (pool == NULL) {
-        printf("Fail to get valid mem_pool for size %d.\n", size);
+        printf("Fail to get valid mem_pool for size %d.\n", (int)size);
         return NULL;
     }
 
