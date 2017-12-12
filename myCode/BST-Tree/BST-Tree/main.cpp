@@ -42,7 +42,7 @@ int findMin(BST_Node* root) {
 }
 
 // add node into a BST
-BST_Node* addNode(BST_Node* &root, int v) {
+BST_Node* addNode(BST_Node* root, int v) {
     if (root == NULL) {
         root = new BST_Node(v);
     } else {
@@ -57,7 +57,8 @@ BST_Node* addNode(BST_Node* &root, int v) {
     return root;
 }
 
-BST_Node* delNode(BST_Node* &root, int v) {
+// del node from a BST
+BST_Node* delNode(BST_Node* root, int v) {
     if (root == NULL) {
         cout << "Node with value " << v << " NOT exist!" << endl;
         return NULL;
@@ -86,6 +87,7 @@ void searchBST(BST_Node* root, vector<int> &res, int L, int R) {
     searchBST(root->right, res, L, R);
 }
 
+// search for a range [L,R]
 vector<int> searchBST(BST_Node* root, int L, int R) {
     vector<int> res;
     searchBST(root, res, L, R);
