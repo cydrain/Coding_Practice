@@ -1,8 +1,8 @@
 //
 //  main.cpp
-//  BST
+//  BST-Tree
 //
-//  Created by caiyd on 17/12/11.
+//  Created by caiyd on 17/12/12.
 //  Copyright © 2017年 caiyd. All rights reserved.
 //
 
@@ -11,30 +11,30 @@
 #include <vector>
 using namespace std;
 
-struct TreeNode {
+struct BST_Node {
     int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+    BST_Node *left;
+    BST_Node *right;
+    BST_Node(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-TreeNode* sortedArrayToBST(vector<int>& nums, int l, int r) {
+BST_Node* sortedArrayToBST(vector<int>& nums, int l, int r) {
     if (l > r) return NULL;
     int m = l + (r-l)/2;
-    TreeNode* root = new TreeNode(nums[m]);
+    BST_Node* root = new BST_Node(nums[m]);
     root->left = sortedArrayToBST(nums, l, m-1);
     root->right = sortedArrayToBST(nums, m+1, r);
     return root;
 }
 
 // create a BST from a sorted array
-TreeNode* sortedArrayToBST(vector<int>& nums) {
+BST_Node* sortedArrayToBST(vector<int>& nums) {
     int n = nums.size();
     return sortedArrayToBST(nums, 0, n-1);
 }
 
 // find min value in a BST
-int findMin(TreeNode* root) {
+int findMin(BST_Node* root) {
     while (root->left) {
         root = root->left;
     }
@@ -42,9 +42,9 @@ int findMin(TreeNode* root) {
 }
 
 // add node into a BST
-TreeNode* addNode(TreeNode* &root, int v) {
+BST_Node* addNode(BST_Node* &root, int v) {
     if (root == NULL) {
-        root = new TreeNode(v);
+        root = new BST_Node(v);
     } else {
         if (v < root->val) {
             root->left = addNode(root->left, v);
@@ -57,7 +57,7 @@ TreeNode* addNode(TreeNode* &root, int v) {
     return root;
 }
 
-TreeNode* delNode(TreeNode* &root, int v) {
+BST_Node* delNode(BST_Node* &root, int v) {
     if (root == NULL) {
         cout << "Node with value " << v << " NOT exist!" << endl;
         return NULL;
@@ -77,7 +77,7 @@ TreeNode* delNode(TreeNode* &root, int v) {
     return root;
 }
 
-void searchBST(TreeNode* root, vector<int> &res, int L, int R) {
+void searchBST(BST_Node* root, vector<int> &res, int L, int R) {
     if (!root) return;
     searchBST(root->left, res, L, R);
     if (root->val >= L && root->val <= R) {
@@ -86,14 +86,14 @@ void searchBST(TreeNode* root, vector<int> &res, int L, int R) {
     searchBST(root->right, res, L, R);
 }
 
-vector<int> searchBST(TreeNode* root, int L, int R) {
+vector<int> searchBST(BST_Node* root, int L, int R) {
     vector<int> res;
     searchBST(root, res, L, R);
     return res;
 }
 
 // pre-order traversal
-void printBST(TreeNode* root) {
+void printBST(BST_Node* root) {
     if (!root) {
         cout << "#";
     } else {
@@ -109,8 +109,8 @@ int main(int argc, const char * argv[]) {
     // insert code here...
     int a[6] = {2,3,1,4,5,6};
     vector<int> array(a, a+6);
-    TreeNode* root = NULL;
-
+    BST_Node* root = NULL;
+    
     for (int i = 0; i < array.size(); i++) {
         root = addNode(root, array[i]);
     }
@@ -126,4 +126,3 @@ int main(int argc, const char * argv[]) {
     
     return 0;
 }
-
