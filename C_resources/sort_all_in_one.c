@@ -283,36 +283,39 @@ int getBitData(int data, int index) {
 
 
 // 10. bucket sort
-/*
-void insert(int[] a, int index, int x) {
+void insert(int a[], int index, int x) {
     // 元素插入数组a[0:index-1]
     int i;
     for (i = index - 1; i >= 0 && x < a[i]; i--) {
-        a[i + 1] = a[i];
+        a[i+1] = a[i];
     }
-    a[i + 1] = x;
+    a[i+1] = x;
 }
 
 // 插入排序
-void insertSort(int[] a) {
-    int n = a.length;
+void insertSort(int a[], int n) {
     for (int i = 1; i < n; i++) {
         int p = a[i];
         insert(a, i, p);
     }
 }
 
-void bucketSort(int[] a) {
-    int M = 10; // 11个桶
-    int n = a.length;
-    int[] bucketA = new int[M]; // 用于存放每个桶中的元素个数
-    // 构造一个二维数组b，用来存放A中的数据,这里的B相当于很多桶，B[i][]代表第i个桶
-    int[][] b = new int[M][n];
+void bucket_sort(int a[], int n) {
     int i, j;
+    int M = 10; // 11个桶
+    int* bucketA = new int[M]; // 用于存放每个桶中的元素个数
+    // 构造一个二维数组b，用来存放A中的数据,这里的B相当于很多桶，B[i][]代表第i个桶
+    int** b = new int*[M];
+    for (i = 0; i < M; i++) {
+        b[i] = new int[n];
+    }
 
-    for (i = 0; i < M; i++)
-        for (j = 0; j < n; j++)
+    for (i = 0; i < M; i++) {
+        for (j = 0; j < n; j++) {
             b[i][j] = 0;
+        }
+        bucketA[i] = 0;
+    }
 
     int data, bucket;
 
@@ -327,25 +330,23 @@ void bucketSort(int[] a) {
         bucketA[bucket]++;
     }
 
-    System.out.println("每个桶内元素个数：");
+    printf("每个桶内元素个数：");
     for (i = 0; i < M; i++) {
-        System.out.print(bucketA[i] + " ");
+        printf("%d ", bucketA[i]);
     }
+    printf("\n");
 
-    System.out.println();
-
-    System.out.println("数据插入桶后，桶内未进行排序前的结果为：");
-
+    printf("数据插入桶后，桶内未进行排序前的结果为：\n");
     for (i = 0; i < M; i++) {
+        printf("Bucket No.%2d: ", i);
         for (j = 0; j < n; j++)
-            System.out.print(b[i][j] + " ");
-        System.out.println();
+            printf("%4d", b[i][j]);
+        printf("\n");
     }
 
-    System.out.println("对每个桶进行插入排序，结果为：");
+    printf("对每个桶进行插入排序，结果为：");
 
     // 下面使用直接插入排序对这个二维数组进行排序,也就是对每个桶进行排序
-
     for (i = 0; i < M; i++) {
         // 下面是对具有数据的一列进行直接插入排序，也就是对B[i][]这个桶中的数据进行排序
         if (bucketA[i] != 0) {
@@ -354,10 +355,9 @@ void bucketSort(int[] a) {
                 int p = b[i][j];
                 int k;
                 for (k = j - 1; k >= 0 && p < b[i][k]; k--) {
-                    assert(k == -1);
+                    //assert(k == -1);
                     b[i][k + 1] = b[i][k];
                 }
-
                 b[i][k + 1] = p;
             }
         }
@@ -367,31 +367,41 @@ void bucketSort(int[] a) {
     for (i = 0; i < 10; i++) {
         if (bucketA[i] != 0) {
             for (j = 0; j < bucketA[i]; j++) {
-                System.out.print(b[i][j] + " ");
+                printf("%d ", b[i][j]);
             }
         }
     }
+    printf("\n");
+
+    for (i = 0; i < M; i++) {
+        delete[] b[i];
+    }
+    delete[] b;
 }
-*/
+
+void show(int A[], int n, const char* header) {
+    int i;
+    if (header) {
+        printf("%s", header);
+    }
+    for (i = 0; i < n; i++) {
+        printf("%3d", A[i]);
+    }
+    printf("\n");
+}
 
 int main() {
     int num[10] = {41, 34, 89, 22, 6, 91, 53, 29, 66, 30};
     int sorted[10];
     int i;
 
-    printf("\nBefore sort: ");
-    for (i = 0; i < 10; i++) {
-        printf("%3d", num[i]);
-    }
+    show(num, 10, "Before sort: ");
 
     //select_sort(num, 10);
-    count_sort(num, sorted, 10, getMaxNumber(num, 10));
+    //count_sort(num, sorted, 10, getMaxNumber(num, 10));
+    bucket_sort(num, 10);
 
-    printf("\nAfter  sort: ");
-    for (i = 0; i < 10; i++) {
-        printf("%3d", sorted[i]);
-    }
-    printf("\n");
+    //show(num, 10, "After sort: ");
 
     return 0;
 }
