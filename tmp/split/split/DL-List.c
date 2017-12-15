@@ -38,6 +38,18 @@ public:
         delete tail;
     }
     
+    bool empty() {
+        return (head->next == tail);
+    }
+
+    bool has_next(DL_Node* node) {
+        return (node->next != tail);
+    }
+
+    DL_Node* get_next(Dl_Node* node) {
+        return node->next;
+    }
+
     int get(string& key, void* &data) {
         DL_Node *entry;
         void* data;

@@ -1,0 +1,9 @@
+Abort
+BUY GFD 1000 10 order1
+SELL GFD 900 20 order2
+BUY GFD 1010 16 order3
+CANCEL order2
+CANCEL order3
+PRINT
+
+

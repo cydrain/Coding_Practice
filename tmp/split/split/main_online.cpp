@@ -53,13 +53,11 @@ public:
     void* pop(string key) {
         DL_Node *entry;
         void* data;
-        auto it = m.find(key);
-        if (it != m.end()) {
+        if (m.find(key) != m.end()) {
             entry = m[key];
             detach(entry);
             data = entry->data;
             delete entry;
-            m.erase(it);
             return data;
         }
         else {
@@ -334,3 +332,4 @@ int main(int argc, const char * argv[]) {
     me->run();
     return 0;
 }
+
