@@ -1,3 +1,4 @@
+/* Wrong Answer: 18, 22, 23 */
 #include <map>
 #include <set>
 #include <list>
@@ -96,6 +97,7 @@ public:
         return head;
     }
     
+    /* delete a node from double-linked list */
     order* erase(string key) {
         DL_Node *entry;
         order* data;
@@ -113,6 +115,7 @@ public:
         }
     }
     
+    /* insert a node into double-linked list with descending order */
     void insert(string key, order* data) {
         DL_Node *entry = new DL_Node(key, data);
         attach(entry);
@@ -123,12 +126,12 @@ private:
     void attach(DL_Node* entry) {
         DL_Node *node = head->next;
         if (insert_dir) {
-            /* for same price, insert to frond */
+            /* if price is same, insert to frond */
             while (node != tail && entry->data->price < node->data->price) {
                 node = node->next;
             }
         } else {
-            /* for same price, insert to behind */
+            /* if price is same, insert to behind */
             while (node != tail && entry->data->price <= node->data->price) {
                 node = node->next;
             }
@@ -144,6 +147,7 @@ private:
     }
 };
 
+/* check string is all digits */
 bool isDigit(const char* p) {
     while (*p != '\0') {
         if (*p < '0' || *p > '9') {
@@ -184,6 +188,8 @@ void MatchEngine::buy(order* bo) {
     DL_Node *node, *prev;
     order *so;
     int volume;
+    
+    /* check sell_list from tail to head (from price low to high) */
     node = sell_list->rbegin();
     while (bo->volume > 0 && node != sell_list->rend()) {
         prev = node->prev;
@@ -215,6 +221,8 @@ void MatchEngine::sell(order* so) {
     DL_Node *node, *next;
     order *bo;
     int volume;
+    
+    /* check buy_list from head to tail (from price high to low) */
     node = buy_list->begin();
     while (so->volume > 0 && node != buy_list->end()) {
         next = node->next;
@@ -268,7 +276,6 @@ void MatchEngine::print(void) {
     if (!sell_list->empty()) {
         for (node = sell_list->begin(); node != sell_list->end(); node = node->next) {
             o = node->data;
-            //cout << o->price << " " << o->volume << " " << o->orderID << endl;
             if (o->price != price) {
                 if (price != 0) {
                     cout << price << " " << volume << endl;
@@ -287,7 +294,6 @@ void MatchEngine::print(void) {
     if (!buy_list->empty()) {
         for (node = buy_list->begin(); node != buy_list->end(); node = node->next) {
             o = node->data;
-            //cout << o->price << " " << o->volume << " " << o->orderID << endl;
             if (o->price != price) {
                 if (price != 0) {
                     cout << price << " " << volume << endl;
@@ -346,9 +352,7 @@ void MatchEngine::parseLine(const string& buf) {
             p = strtok(NULL, " ");
             if (!p || !isDigit(p)) throw exception();
             o->volume = atoi(p);
-            if (o->price <= 0 || o->volume <= 0) {
-                throw exception();
-            }
+            if (o->price <= 0 || o->volume <= 0) throw exception();
             
             p = strtok(NULL, " ");
             if (!p || *p == '\0') throw exception();
@@ -369,9 +373,7 @@ void MatchEngine::parseLine(const string& buf) {
             p = strtok(NULL, " ");
             if (!p || !isDigit(p)) throw exception();
             o->volume = atoi(p);
-            if (o->price <= 0 || o->volume <= 0) {
-                throw exception();
-            }
+            if (o->price <= 0 || o->volume <= 0) throw exception();
             
             p = strtok(NULL, " ");
             if (!p || *p == '\0') throw exception();
@@ -404,9 +406,8 @@ void MatchEngine::parseLine(const string& buf) {
             p = strtok(NULL, " ");
             if (!p || !isDigit(p)) throw exception();
             o->volume = atoi(p);
-            if (o->price <= 0 || o->volume <= 0) {
-                throw exception();
-            }
+            if (o->price <= 0 || o->volume <= 0) throw exception();
+            
             processOrder(o);
         } else if (strcmp(p, "PRINT") == 0) {
             o->cmd = ORDER_CMD_PRINT;
@@ -415,8 +416,8 @@ void MatchEngine::parseLine(const string& buf) {
         free(line);
     }
     catch(...) {
-        if (o) delete o;
-        if (line) free(line);
+        delete o;
+        free(line);
     }
 }
 

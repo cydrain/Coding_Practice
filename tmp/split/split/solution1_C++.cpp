@@ -1,16 +1,27 @@
-//
-//  main.cpp
-//  split
-//
-//  Created by caiyd on 17/12/14.
-//  Copyright © 2017年 caiyd. All rights reserved.
-//
-
-#include <stdlib.h>
-#include <iostream>
-#include <string>
-#include <vector>
+/* Wrong Answer: 16 18 21 22 23 25 27 */
 #include <map>
+#include <set>
+#include <list>
+#include <cmath>
+#include <ctime>
+#include <deque>
+#include <queue>
+#include <stack>
+#include <string>
+#include <bitset>
+#include <cstdio>
+#include <limits>
+#include <vector>
+#include <climits>
+#include <cstring>
+#include <cstdlib>
+#include <fstream>
+#include <numeric>
+#include <sstream>
+#include <iostream>
+#include <algorithm>
+#include <unordered_map>
+
 using namespace std;
 
 struct DL_Node {
@@ -53,11 +64,13 @@ public:
     void* pop(string key) {
         DL_Node *entry;
         void* data;
-        if (m.find(key) != m.end()) {
+        auto it = m.find(key);
+        if (it != m.end()) {
             entry = m[key];
             detach(entry);
             data = entry->data;
             delete entry;
+            m.erase(it);
             return data;
         }
         else {
@@ -255,23 +268,23 @@ void MatchEngine::print(void) {
 void MatchEngine::processOrder(order* o) {
     switch (o->cmd) {
         case ORDER_CMD_BUY:
-            cout << o->cmd << " " << o->type << " " << o->price << " " << o->volume << " " << o->orderID << endl;
+            //cout << o->cmd << " " << o->type << " " << o->price << " " << o->volume << " " << o->orderID << endl;
             buy(o);
             break;
         case ORDER_CMD_SELL:
-            cout << o->cmd << " " << o->type << " " << o->price << " " << o->volume << " " << o->orderID << endl;
+            //cout << o->cmd << " " << o->type << " " << o->price << " " << o->volume << " " << o->orderID << endl;
             sell(o);
             break;
         case ORDER_CMD_CANCEL:
-            cout << o->cmd << " " << o->orderID << endl;
+            //cout << o->cmd << " " << o->orderID << endl;
             cancel(o);
             break;
         case ORDER_CMD_MODIFY:
-            cout << o->cmd << " " << o->orderID << " " << o->cmd2 << " " << o->price << " " << o->volume << endl;
+            //cout << o->cmd << " " << o->orderID << " " << o->cmd2 << " " << o->price << " " << o->volume << endl;
             modify(o);
             break;
         case ORDER_CMD_PRINT:
-            cout << o->cmd << endl;
+            //cout << o->cmd << endl;
             print();
             break;
         default:
@@ -287,30 +300,92 @@ void MatchEngine::parseLine(const string& buf) {
     if (strcmp(p, "BUY") == 0) {
         o->cmd = ORDER_CMD_BUY;
         p = strtok(NULL, " ");
-        o->type = (strcmp(p, "GFD") == 0 ? ORDER_TYPE_GFD : ORDER_TYPE_IOC);
+        if (strcmp(p, "IOC") == 0) {
+            o->type = ORDER_TYPE_IOC;
+        } else if (strcmp(p, "GFD") == 0) {
+            o->type = ORDER_TYPE_GFD;
+        } else {
+            delete o;
+            free(line);
+            return;
+        }
+        //o->type = (strcmp(p, "GFD") == 0 ? ORDER_TYPE_GFD : ORDER_TYPE_IOC);
         o->price = atoi(strtok(NULL, " "));
         o->volume = atoi(strtok(NULL, " "));
         o->orderID = strdup(strtok(NULL, " "));
+        if (o->price <= 0 || o->volume <= 0) {
+            delete o;
+            free(line);
+            return;
+        }
+        if (o->orderID == NULL || strlen(o->orderID) == 0) {
+            delete o;
+            free(line);
+            return;
+        }
         processOrder(o);
     } else if (strcmp(p, "SELL") == 0) {
         o->cmd = ORDER_CMD_SELL;
         p = strtok(NULL, " ");
-        o->type = (strcmp(p, "GFD") == 0 ? ORDER_TYPE_GFD : ORDER_TYPE_IOC);
+        //o->type = (strcmp(p, "GFD") == 0 ? ORDER_TYPE_GFD : ORDER_TYPE_IOC);
+        if (strcmp(p, "IOC") == 0) {
+            o->type = ORDER_TYPE_IOC;
+        } else if (strcmp(p, "GFD") == 0) {
+            o->type = ORDER_TYPE_GFD;
+        } else {
+            delete o;
+            free(line);
+            return;
+        }
         o->price = atoi(strtok(NULL, " "));
         o->volume = atoi(strtok(NULL, " "));
         o->orderID = strdup(strtok(NULL, " "));
+        if (o->price <= 0 || o->volume <= 0) {
+            delete o;
+            free(line);
+            return;
+        }
+        if (o->orderID == NULL || strlen(o->orderID) == 0) {
+            delete o;
+            free(line);
+            return;
+        }
         processOrder(o);
     } else if (strcmp(p, "CANCEL") == 0) {
         o->cmd = ORDER_CMD_CANCEL;
         o->orderID = strdup(strtok(NULL, " "));
+        if (o->orderID == NULL || strlen(o->orderID) == 0) {
+            delete o;
+            free(line);
+            return;
+        }
         processOrder(o);
     } else if (strcmp(p, "MODIFY") == 0) {
         o->cmd = ORDER_CMD_MODIFY;
         o->orderID = strdup(strtok(NULL, " "));
+        if (o->orderID == NULL || strlen(o->orderID) == 0) {
+            delete o;
+            free(line);
+            return;
+        }
         p = strtok(NULL, " ");
-        o->cmd2 = (strcmp(p, "BUY") == 0 ? ORDER_CMD_BUY : ORDER_CMD_SELL);
+        //o->cmd2 = (strcmp(p, "BUY") == 0 ? ORDER_CMD_BUY : ORDER_CMD_SELL);
+        if (strcmp(p, "BUY") == 0) {
+            o->cmd2 = ORDER_CMD_BUY;
+        } else if (strcmp(p, "SELL") == 0) {
+            o->cmd2 = ORDER_CMD_SELL;
+        } else {
+            delete o;
+            free(line);
+            return;
+        }
         o->price = atoi(strtok(NULL, " "));
         o->volume = atoi(strtok(NULL, " "));
+        if (o->price <= 0 || o->volume <= 0) {
+            delete o;
+            free(line);
+            return;
+        }
         processOrder(o);
     } else if (strcmp(p, "PRINT") == 0) {
         o->cmd = ORDER_CMD_PRINT;
