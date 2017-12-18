@@ -22,17 +22,17 @@
  *　C++代码如下:
  */
 
-int IsTextUTF8(char* str, ULONGLONG length) {
+int IsTextUTF8(char* str, unsigned long long length) {
 　　int i;
 　　int nBytes = 0;         // UFT8可用1-6个字节编码,ASCII用一个字节
 　　char chr;
-　　bool bAllAscii=TRUE;    // 如果全部都是ASCII, 说明不是UTF-8
+　　bool bAllAscii = true;    // 如果全部都是ASCII, 说明不是UTF-8
 　　
     for (i = 0; i < length; i++) {
 　　    chr= *(str+i);
 　　    if ((chr & 0x80) != 0) {  // 判断是否ASCII编码,如果不是,说明有可能是UTF-8,
                                   // ASCII用7位编码,但用一个字节存,最高位标记为0, 0xxxxxxx
-　　        bAllAscii = FALSE;
+　　        bAllAscii = false;
         }
 
 　　    if (nBytes == 0) {	        //如果不是ASCII码,应该是多字节符,计算字节数
@@ -47,17 +47,17 @@ int IsTextUTF8(char* str, ULONGLONG length) {
 　　    }
 　      else { //多字节符的非首字节,应为 10xxxxxx
 　　　      if ((chr & 0xC0) != 0x80) {
-　　            return FALSE;
+　　            return false;
 　　        }
 　　        nBytes--;
 　　    }
 　  } // end of for
 　　if (nBytes > 0) { //违返规则
-　　    return FALSE;
+　　    return false;
 　　}
 　　if (bAllAscii) { //如果全部都是ASCII, 说明不是UTF-8
-　　    return FALSE;
+　　    return false;
 　　}
-　  return TRUE;
+　  return true;
 }
 

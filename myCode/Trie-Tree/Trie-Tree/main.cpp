@@ -1,28 +1,37 @@
+//
+//  main.cpp
+//  Trie-Tree
+//
+//  Created by caiyd on 17/12/18.
+//  Copyright © 2017年 caiyd. All rights reserved.
+//
+
 #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <memory.h>
 using namespace std;
 
 #define CHAR_NUM    26
-#define true        1
-#define false       0
 
 struct Trie_node {
     bool isStr;
     Trie_node *next[CHAR_NUM];
-
+    
     Trie_node() : isStr(false) {
         memset(next, NULL, sizeof(next));
     }
 };
 
 class Trie {
-    private:
-        Trie_node *root;
-
-    public:
-        Trie();
-        void insert(const char *word);
-        bool search(const char *word);
-        void destroy(Trie_node *root);
+private:
+    Trie_node *root;
+    
+public:
+    Trie();
+    void insert(const char *word);
+    bool search(const char *word);
+    void destroy(Trie_node *root);
 };
 
 Trie::Trie() {
@@ -66,7 +75,8 @@ void Trie::destroy(Trie_node *root) {
     delete root;
 }
 
-int main(void) {
+int main(int argc, const char * argv[]) {
+    // insert code here...
     Trie t;
     t.insert("cyd");
     t.insert("a");
