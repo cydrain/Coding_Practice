@@ -1,3 +1,4 @@
+/* Wrong Answer: 18, 22, 23 */
 #include <map>
 #include <set>
 #include <list>
@@ -24,7 +25,8 @@
 using namespace std;
 
 enum order_cmd {
-    ORDER_CMD_BUY = 0,
+    ORDER_CMD_NULL = 0,
+    ORDER_CMD_BUY,
     ORDER_CMD_SELL,
     ORDER_CMD_CANCEL,
     ORDER_CMD_MODIFY,
@@ -32,7 +34,8 @@ enum order_cmd {
 };
 
 enum order_type {
-    ORDER_TYPE_GFD = 0,
+    ORDER_TYPE_NULL = 0,
+    ORDER_TYPE_GFD,
     ORDER_TYPE_IOC
 };
 
@@ -40,10 +43,10 @@ struct order {
     order_cmd   cmd;
     order_cmd   cmd2;
     order_type  type;
-    int         price;
-    int         volume;
+    unsigned long price;
+    unsigned long volume;
     char*       orderID;
-    order(): cmd(ORDER_CMD_BUY), cmd2(ORDER_CMD_BUY), type(ORDER_TYPE_GFD), price(0), volume(0), orderID(NULL) {}
+    order(): cmd(ORDER_CMD_NULL), cmd2(ORDER_CMD_NULL), type(ORDER_TYPE_NULL), price(0), volume(0), orderID(NULL) {}
     ~order() { delete orderID; }
 };
 
@@ -61,8 +64,8 @@ private:
     DL_Node *head;
     DL_Node *tail;
     map<string,DL_Node*> m;
-    bool insert_dir;    /* True: insert from head to tail
-                           False: insert from tail to head */
+    bool insert_dir;    /* True: if two elements have same key, insert to front;
+                           False: if two elements have same key, insert to back. */
 public:
     DL_List(bool flag) {
         head = new DL_Node("", NULL);
@@ -72,8 +75,10 @@ public:
         insert_dir = flag;
     }
     ~DL_List() {
-        delete head;
-        delete tail;
+        DL_Node *node;
+        for (node = head; node; head = head->next) {
+            delete node;
+        }
     }
     
     bool empty() {
@@ -96,6 +101,7 @@ public:
         return head;
     }
     
+    /* delete a node from double-linked list */
     order* erase(string key) {
         DL_Node *entry;
         order* data;
@@ -107,12 +113,12 @@ public:
             delete entry;
             m.erase(it);
             return data;
-        }
-        else {
+        } else {
             return NULL;
         }
     }
     
+    /* insert a node into double-linked list with descending order */
     void insert(string key, order* data) {
         DL_Node *entry = new DL_Node(key, data);
         attach(entry);
@@ -123,12 +129,12 @@ private:
     void attach(DL_Node* entry) {
         DL_Node *node = head->next;
         if (insert_dir) {
-            /* for same price, insert to frond */
+            /* if price is same, insert to frond */
             while (node != tail && entry->data->price < node->data->price) {
                 node = node->next;
             }
         } else {
-            /* for same price, insert to behind */
+            /* if price is same, insert to back */
             while (node != tail && entry->data->price <= node->data->price) {
                 node = node->next;
             }
@@ -144,6 +150,7 @@ private:
     }
 };
 
+/* check string is all digits */
 bool isDigit(const char* p) {
     while (*p != '\0') {
         if (*p < '0' || *p > '9') {
@@ -163,7 +170,11 @@ public:
         buy_list = new DL_List(false);
         sell_list = new DL_List(true);
     };
-    void trade(order*, order*, int);
+    ~MatchEngine() {
+        delete buy_list;
+        delete sell_list;
+    }
+    void trade(order*, order*, unsigned long);
     void buy(order*);
     void sell(order*);
     void cancel(order*);
@@ -172,9 +183,11 @@ public:
     void processOrder(order*);
     void parseLine(const string&);
     void run();
+private:
+    void printBookInfo(DL_List*);
 };
 
-void MatchEngine::trade(order* o1, order* o2, int volume) {
+void MatchEngine::trade(order* o1, order* o2, unsigned long volume) {
     cout << "TRADE ";
     cout << o1->orderID << " " << o1->price << " " << volume << " ";
     cout << o2->orderID << " " << o2->price << " " << volume << endl;
@@ -183,7 +196,9 @@ void MatchEngine::trade(order* o1, order* o2, int volume) {
 void MatchEngine::buy(order* bo) {
     DL_Node *node, *prev;
     order *so;
-    int volume;
+    unsigned long volume;
+    
+    /* check sell_list from tail to head (from price low to high) */
     node = sell_list->rbegin();
     while (bo->volume > 0 && node != sell_list->rend()) {
         prev = node->prev;
@@ -214,7 +229,9 @@ void MatchEngine::buy(order* bo) {
 void MatchEngine::sell(order* so) {
     DL_Node *node, *next;
     order *bo;
-    int volume;
+    unsigned long volume;
+    
+    /* check buy_list from head to tail (from price high to low) */
     node = buy_list->begin();
     while (so->volume > 0 && node != buy_list->end()) {
         next = node->next;
@@ -260,46 +277,32 @@ void MatchEngine::modify(order* o) {
     processOrder(o1);
 }
 
-void MatchEngine::print(void) {
+void MatchEngine::printBookInfo(DL_List* list) {
     DL_Node* node;
     order* o;
-    int price = 0, volume = 0;
+    unsigned long price = 0, volume = 0;
+    if (!list->empty()) {
+        for (node = list->begin(); node != list->end(); node = node->next) {
+            o = node->data;
+            if (o->price != price) {
+                if (price != 0) {
+                    cout << price << " " << volume << endl;
+                }
+                price = o->price;
+                volume = o->volume;
+            } else {
+                volume += o->volume;
+            }
+        }
+        cout << price << " " << volume << endl;
+    }
+}
+
+void MatchEngine::print(void) {
     cout << "SELL:" << endl;
-    if (!sell_list->empty()) {
-        for (node = sell_list->begin(); node != sell_list->end(); node = node->next) {
-            o = node->data;
-            //cout << o->price << " " << o->volume << " " << o->orderID << endl;
-            if (o->price != price) {
-                if (price != 0) {
-                    cout << price << " " << volume << endl;
-                }
-                price = o->price;
-                volume = o->volume;
-            } else {
-                volume += o->volume;
-            }
-        }
-        cout << price << " " << volume << endl;
-    }
-    
-    price = volume = 0;
+    printBookInfo(sell_list);
     cout << "BUY:" << endl;
-    if (!buy_list->empty()) {
-        for (node = buy_list->begin(); node != buy_list->end(); node = node->next) {
-            o = node->data;
-            //cout << o->price << " " << o->volume << " " << o->orderID << endl;
-            if (o->price != price) {
-                if (price != 0) {
-                    cout << price << " " << volume << endl;
-                }
-                price = o->price;
-                volume = o->volume;
-            } else {
-                volume += o->volume;
-            }
-        }
-        cout << price << " " << volume << endl;
-    }
+    printBookInfo(buy_list);
 }
 
 void MatchEngine::processOrder(order* o) {
@@ -332,50 +335,28 @@ void MatchEngine::parseLine(const string& buf) {
         line = strdup(buf.c_str());
         p = strtok(line, " ");
         if (p == NULL) throw exception();
-        if (strcmp(p, "BUY") == 0) {
-            o->cmd = ORDER_CMD_BUY;
+        if (strcmp(p, "BUY") == 0 || strcmp(p, "SELL") == 0) {
+            o->cmd = (*p == 'B' ? ORDER_CMD_BUY : ORDER_CMD_SELL);
             
             p = strtok(NULL, " ");
             if (!p || (strcmp(p, "GFD") && strcmp(p, "IOC"))) throw exception();
-            o->type = (strcmp(p, "GFD") == 0 ? ORDER_TYPE_GFD : ORDER_TYPE_IOC);
+            o->type = (*p == 'G' ? ORDER_TYPE_GFD : ORDER_TYPE_IOC);
     
             p = strtok(NULL, " ");
             if (!p || !isDigit(p)) throw exception();
-            o->price = atoi(p);
+            o->price = strtoul(p, NULL, 10);
             
             p = strtok(NULL, " ");
             if (!p || !isDigit(p)) throw exception();
-            o->volume = atoi(p);
-            if (o->price <= 0 || o->volume <= 0) {
-                throw exception();
-            }
+            o->volume = strtoul(p, NULL, 10);
+            if (o->price <= 0 || o->volume <= 0) throw exception();
             
             p = strtok(NULL, " ");
             if (!p || *p == '\0') throw exception();
             o->orderID = strdup(p);
-    
-            processOrder(o);
-        } else if (strcmp(p, "SELL") == 0) {
-            o->cmd = ORDER_CMD_SELL;
             
-            p = strtok(NULL, " ");
-            if (!p || (strcmp(p, "GFD") && strcmp(p, "IOC"))) throw exception();
-            o->type = (strcmp(p, "GFD") == 0 ? ORDER_TYPE_GFD : ORDER_TYPE_IOC);
-    
-            p = strtok(NULL, " ");
-            if (!p || !isDigit(p)) throw exception();
-            o->price = atoi(p);
-            
-            p = strtok(NULL, " ");
-            if (!p || !isDigit(p)) throw exception();
-            o->volume = atoi(p);
-            if (o->price <= 0 || o->volume <= 0) {
-                throw exception();
-            }
-            
-            p = strtok(NULL, " ");
-            if (!p || *p == '\0') throw exception();
-            o->orderID = strdup(p);
+            /* check extra input */
+            if (strtok(NULL, " ")) throw exception();
             
             processOrder(o);
         } else if (strcmp(p, "CANCEL") == 0) {
@@ -384,6 +365,9 @@ void MatchEngine::parseLine(const string& buf) {
             p = strtok(NULL, " ");
             if (!p || *p == '\0') throw exception();
             o->orderID = strdup(p);
+            
+            /* check extra input */
+            if (strtok(NULL, " ")) throw exception();
             
             processOrder(o);
         } else if (strcmp(p, "MODIFY") == 0) {
@@ -395,28 +379,34 @@ void MatchEngine::parseLine(const string& buf) {
             
             p = strtok(NULL, " ");
             if (!p || (strcmp(p, "BUY") && strcmp(p, "SELL"))) throw exception();
-            o->cmd2 = (strcmp(p, "BUY") == 0 ? ORDER_CMD_BUY : ORDER_CMD_SELL);
+            o->cmd2 = (*p == 'B' ? ORDER_CMD_BUY : ORDER_CMD_SELL);
     
             p = strtok(NULL, " ");
             if (!p || !isDigit(p)) throw exception();
-            o->price = atoi(p);
+            o->price = strtoul(p, NULL, 10);
             
             p = strtok(NULL, " ");
             if (!p || !isDigit(p)) throw exception();
-            o->volume = atoi(p);
-            if (o->price <= 0 || o->volume <= 0) {
-                throw exception();
-            }
+            o->volume = strtoul(p, NULL, 10);
+            if (o->price <= 0 || o->volume <= 0) throw exception();
+            
+            /* check extra input */
+            if (strtok(NULL, " ")) throw exception();
+            
             processOrder(o);
         } else if (strcmp(p, "PRINT") == 0) {
             o->cmd = ORDER_CMD_PRINT;
+            
+            /* check extra input */
+            if (strtok(NULL, " ")) throw exception();
+            
             processOrder(o);
         }
         free(line);
     }
     catch(...) {
-        if (o) delete o;
-        if (line) free(line);
+        delete o;
+        free(line);
     }
 }
 

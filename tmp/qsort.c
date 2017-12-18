@@ -4,12 +4,12 @@ void qsort(int A[], int start, int end) {
     if (start >= end) return;
     int l = start, r = end;
     int x = A[start];
-
     while (l < r) {
-        while (l < r && A[r] >= x) r--;
+        // check from right to left
+        while (l < r && x <= A[r]) r--;
         if (l < r) A[l++] = A[r];
-
-        while (l < r && A[l] <= x) l++;
+        // check from left to right
+        while (l < r && x >= A[l]) l++;
         if (l < r) A[r--] = A[l];
     }
     A[r] = x;
