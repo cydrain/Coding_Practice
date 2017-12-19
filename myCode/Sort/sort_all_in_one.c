@@ -36,8 +36,8 @@ void bubble_sort3(int A[], int n) {
 // 2. insert sorting
 void insert_sort(int A[], int n) {
     int i, j;
-    for (i = 0; i < n-1; i++) {
-        for (j = i+1; A[j] < A[j-1]; j--) {
+    for (i = 1; i < n; i++) {
+        for (j = i; j > 0 && A[j] < A[j-1]; j--) {
             swap(A[j], A[j-1]);
         }
     }
@@ -397,11 +397,11 @@ int main() {
 
     show(num, 10, "Before sort: ");
 
-    //select_sort(num, 10);
+    insert_sort(num, 10);
     //count_sort(num, sorted, 10, getMaxNumber(num, 10));
-    bucket_sort(num, 10);
+    //bucket_sort(num, 10);
 
-    //show(num, 10, "After sort: ");
+    show(num, 10, "After sort: ");
 
     return 0;
 }
