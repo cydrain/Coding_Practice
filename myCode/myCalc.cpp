@@ -23,7 +23,6 @@ public:
 	void run();
 private:
 	bool checkDigit(string&);
-	bool checkOperator(string&);
 	float execute();
 	bool parseLine(string&);
 };
@@ -40,15 +39,6 @@ bool Calculator::checkDigit(string& str) {
 		}
 	}
 	return (dot <= 1);
-}
-
-bool Calculator::checkOperator(string& str) {
-	int len = str.length();
-	if (len != 1) return false;
-	return (str[0] == '+' ||
-			str[0] == '-' ||
-			str[0] == '*' ||
-			str[0] == '/');
 }
 
 float Calculator::execute() {
@@ -82,53 +72,28 @@ float Calculator::execute() {
             r = a / b;
             s.push(r);
         }
-        else {
+        else if (checkDigit(tokens[i])) {
 			float f = stringToNum<float>(tokens[i]);
 			s.push(f);
-        }
+        } else {
+			throw exception();
+		}
     }
-    return s.top();
+	tokens.clear();
+	if (s.size() != 1) throw exception();
+	return s.top();
 }
 
 bool Calculator::parseLine(string& buf) {
 	char *line, *p;
-	string num, op;
 	
-	try {
-		line = strdup(buf.c_str());
-		p = strtok(line, " ");
-		num = string(p);
-		if (checkDigit(num)) {
-			tokens.push_back(num);
-		} else {
-			throw exception();
-		}
-
+	line = strdup(buf.c_str());
+	p = strtok(line, " ");
+	while (p != NULL) {
+		tokens.push_back(p);
 		p = strtok(NULL, " ");
-		while (p != NULL) {
-			num = string(p);
-			if (checkDigit(num)) {
-				tokens.push_back(num);
-			} else {
-				throw exception();
-			}
-			p = strtok(NULL, " ");
+	}
 
-			if (p == NULL) throw exception();
-			op = string(p);
-			if (checkOperator(op)) {
-				tokens.push_back(op);
-			} else {
-				throw exception();
-			}
-			p = strtok(NULL, " ");
-		}
-	}
-	catch(...) {
-		cout << "Invalud Expression!" << endl;
-		free(line);
-		return false;
-	}
 	free(line);
 	return true;
 }
@@ -141,8 +106,13 @@ void Calculator::run() {
 
 		if (buf == "exit") break;
 
-		if (parseLine(buf)) {
-			cout << execute() << endl;
+		try {
+			if (parseLine(buf)) {
+				cout << execute() << endl;
+			}
+		}
+		catch(...) {
+			cout << "Invalud Expression!" << endl;
 		}
 	}
 }
