@@ -11,6 +11,31 @@
  * ["4", "13", "5", "/", "+"] -> (4 + (13 / 5)) -> 6
  */
 
+class Solution {
+public:
+    int evalRPN(vector<string> &tokens) {
+        int x, y;
+        auto token = tokens.back();  tokens.pop_back();
+        if (is_operator(token))  {
+            y = evalRPN(tokens);
+            x = evalRPN(tokens);
+            if (token[0] == '+')       x += y;
+            else if (token[0] == '-')  x -= y;
+            else if (token[0] == '*')  x *= y;
+            else                       x /= y;
+        } else  {
+            size_t i;
+            x = stoi(token, &i);
+        }
+        return x;
+    }
+private:
+    bool is_operator(const string &op) {
+        return op.size() == 1 && string("+-*/").find(op) != string::npos;
+    }
+};
+
+
 int evalRPN(vector<string> &tokens) {
     stack<int> sk;
     int val, a, b, r;
@@ -42,46 +67,5 @@ int evalRPN(vector<string> &tokens) {
         }
     }
     return sk.top();
-}
-
-
-
-int evalRPN(vector<string> &tokens) {
-    stack<int> s;
-    int n = tokens.size();
-    int a, b, r;
-    int i;
-    
-    for (i = 0; i < n; i++) {
-        if (tokens[i] == "+") {
-            b = s.top(), s.pop();
-            a = s.top(), s.pop();
-            r = a + b;
-            s.push(r);
-        }
-        else if (tokens[i] == "-") {
-            b = s.top(), s.pop();
-            a = s.top(), s.pop();
-            r = a - b;
-            s.push(r);
-        }
-        else if (tokens[i] == "*") {
-            b = s.top(), s.pop();
-            a = s.top(), s.pop();
-            r = a * b;
-            s.push(r);
-        }
-        else if (tokens[i] == "/") {
-            b = s.top(), s.pop();
-            a = s.top(), s.pop();
-            r = a / b;
-            s.push(r);
-        }
-        else {
-            s.push(atoi(tokens[i].c_str()));
-        }
-    }
-    
-    return s.top();
 }
 
