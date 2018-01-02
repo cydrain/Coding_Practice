@@ -1,0 +1,1 @@
+../leetcode/676-Implement Magic Dictionary.c
