@@ -23,8 +23,7 @@
 class Solution {
 public:
     bool validUtf8(vector<int>& data) {
-        int n = data.size();
-        int bytes = 1, i = 0;
+        int bytes = 1;
         for (auto c : data) {
             if (bytes == 1) {
                 if ((c & 0x80) == 0x0) bytes = 1;

@@ -11,17 +11,14 @@
 class Solution {
 public:
     int numWays(int n, int k) {
-        if (n == 0 || k == 0 || (n > 2 && k == 1)) return 0;
-        int w1 = k;
-        int w2 = k * k;
-        int w3 = (n == 1 ? w1 : w2);
-        for (int i = 0; i <= n-3; i++) {
-            // if previous 2 posts use same color (w1), current post can choose left (k-1) colors
-            // or current post always select different color (k-1) than the previous post (w2)
-            w3 = (w1+w2) * (k-1);
-            w1 = w2;
-            w2 = w3;
+        if (n == 0) return 0;
+        if (n == 1) return k;
+        int sameColor = k, diffColor = k*(k-1), tmp, i;
+        for (i = 2; i < n; i++) {
+            tmp = diffColor;
+            diffColor = (sameColor + diffColor) * (k-1);
+            sameColor = tmp;
         }
-        return w3;
+        return (sameColor + diffColor);
     }
 };

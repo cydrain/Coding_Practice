@@ -15,19 +15,14 @@ class Solution {
 public:
     int threeSumSmaller(vector<int>& nums, int target) {
         int n = nums.size();
-        int i, l, r, cnt = 0;
+        int i, j, k, count = 0;
         sort(nums.begin(), nums.end());
         for (i = 0; i < n-2; i++) {
-            l = i+1, r = n-1;
-            while (l < r) {
-                if (nums[i]+nums[l]+nums[r] < target) {
-                    cnt += r-l;
-                    l++;
-                } else {
-                    r--;
-                }
+            for (j = i+1, k = n-1; j < k; j++) {
+                while (j < k && nums[i]+nums[j]+nums[k] >= target) k--;
+                count += k-j;
             }
         }
-        return cnt;
+        return count;
     }
 };

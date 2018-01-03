@@ -22,17 +22,17 @@ class Solution {
     unordered_map<string, unordered_map<string,double>> m;
 public:
     bool calc(string a, string b, unordered_map<string, unordered_map<string, double>>& m, 
-              unordered_set<string>& s, double& val) {
-        //if (m.find(a) == m.end()) return false;
+              unordered_set<string>& visited, double& val) {
+        if (m.find(a) == m.end()) return false;
         if (m[a].find(b) != m[a].end()) {
             val = m[a][b];
             return true;
         } else {
             for (auto mid : m[a]) {
                 double tmp;
-                if (s.find(mid.first) != s.end()) continue;
-                s.insert(mid.first);
-                if (calc(mid.first, b, m, s, tmp)) {
+                if (visited.find(mid.first) != visited.end()) continue;
+                visited.insert(mid.first);
+                if (calc(mid.first, b, m, visited, tmp)) {
                     val = tmp * mid.second;
                     return true;
                 }
@@ -51,8 +51,8 @@ public:
         }
         for (auto q : queries) {
             double val;
-            unordered_set<string> s;
-            if (calc(q.first, q.second, m, s, val)) {
+            unordered_set<string> visited;
+            if (calc(q.first, q.second, m, visited, val)) {
                 res.push_back(val);
             } else {
                 res.push_back(-1.0);
