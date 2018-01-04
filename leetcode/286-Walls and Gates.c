@@ -24,17 +24,16 @@ After running your function, the 2D grid should be:
   1  -1   2  -1
   0  -1   3   4
  */
-
 class Solution {
 public:
-    void dfs(vector<vector<int>>& rooms, int dist, int x, int y) {
+    void dfs(vector<vector<int>>& rooms, int x, int y, int dist) {
         int m = rooms.size();
         int n = rooms[0].size();
-        rooms[x][y] = min(rooms[x][y], dist);
-        if (x > 0   && rooms[x-1][y] > rooms[x][y]+1) dfs(rooms, rooms[x][y]+1, x-1, y);
-        if (x < m-1 && rooms[x+1][y] > rooms[x][y]+1) dfs(rooms, rooms[x][y]+1, x+1, y);
-        if (y > 0   && rooms[x][y-1] > rooms[x][y]+1) dfs(rooms, rooms[x][y]+1, x, y-1);
-        if (y < n-1 && rooms[x][y+1] > rooms[x][y]+1) dfs(rooms, rooms[x][y]+1, x, y+1);
+        rooms[x][y] = dist;
+        if (x+1 < m  && rooms[x+1][y] > dist+1) dfs(rooms, x+1, y, dist+1);
+        if (x-1 >= 0 && rooms[x-1][y] > dist+1) dfs(rooms, x-1, y, dist+1);
+        if (y+1 < n  && rooms[x][y+1] > dist+1) dfs(rooms, x, y+1, dist+1);
+        if (y-1 >= 0 && rooms[x][y-1] > dist+1) dfs(rooms, x, y-1, dist+1);
     }
     void bfs(vector<vector<int>>& rooms, int i, int j) {
         int m = rooms.size();
@@ -45,21 +44,21 @@ public:
         while (!q.empty()) {
             x = q.front().first, y = q.front().second;
             q.pop();
-            if (x > 0   && rooms[x-1][y] > rooms[x][y]+1) {
-                rooms[x-1][y] = rooms[x][y] + 1;
-                q.push(make_pair(x-1, y));
-            }
-            if (x < m-1 && rooms[x+1][y] > rooms[x][y]+1) {
+            if (x+1 < m && rooms[x+1][y] > rooms[x][y]+1) {
                 rooms[x+1][y] = rooms[x][y] + 1;
-                q.push(make_pair(x+1, y));
+                q.push(make_pair(x+1,y));
             }
-            if (y > 0   && rooms[x][y-1] > rooms[x][y]+1) {
-                rooms[x][y-1] = rooms[x][y] + 1;
-                q.push(make_pair(x, y-1));
-            }
-            if (y < n-1 && rooms[x][y+1] > rooms[x][y]+1) {
+            if (x-1 >= 0 && rooms[x-1][y] > rooms[x][y]+1) {
+                rooms[x-1][y] = rooms[x][y] + 1;
+                q.push(make_pair(x-1,y));
+            } 
+            if (y+1 < n && rooms[x][y+1] > rooms[x][y]+1) {
                 rooms[x][y+1] = rooms[x][y] + 1;
-                q.push(make_pair(x, y+1));
+                q.push(make_pair(x,y+1));
+            } 
+            if (y-1 >= 0 && rooms[x][y-1] > rooms[x][y]+1) {
+                rooms[x][y-1] = rooms[x][y] + 1;
+                q.push(make_pair(x,y-1));
             }
         }
     }
@@ -70,9 +69,10 @@ public:
         int i, j;
         for (i = 0; i < m; i++) {
             for (j = 0; j < n; j++) {
-                if (rooms[i][j] == 0) 
-                    //dfs(rooms, 0, i, j);
+                if (rooms[i][j] == 0) {
+                    //dfs(rooms, i, j, 0);
                     bfs(rooms, i, j);
+                }
             }
         }
     }

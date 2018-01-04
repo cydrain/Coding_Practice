@@ -30,9 +30,9 @@ public:
     bool remove(int val) {
         if (m.find(val) == m.end()) return false;
         int last = num.back();
-        num.pop_back();
         m[last] = m[val];
         num[m[last]] = last;
+        num.pop_back();
         m.erase(val);
         return true;
     }

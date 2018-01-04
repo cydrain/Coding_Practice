@@ -9,30 +9,31 @@ The maze is represented by a binary 2D array. 1 means the wall and 0 means the e
  */
 class Solution {
 public:
-    int dir[4][2] = {{1,0}, {-1,0}, {0,1}, {0,-1}};
-    void dfs(vector<vector<int>>& maze, int x, int y, vector<vector<int>>& distance) {
+    int dir[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};
+    void dfs(vector<vector<int>>& maze, vector<vector<int>>& d, int i, int j) {
         int m = maze.size();
         int n = maze[0].size();
-        int i, j, k, count = 0;
+        int k, x, y, count;
         for (k = 0; k < 4; k++) {
-            i = x + dir[k][0], j = y + dir[k][1];
+            x = i+dir[k][0], y = j+dir[k][1];
             count = 0;
-            while (i >= 0 && i < m && j >= 0 && j < n && maze[i][j] == 0) {
+            while (x >= 0 && x < m && y >= 0 && y < n && maze[x][y] == 0) {
                 count++;
-                i = i + dir[k][0], j = j + dir[k][1];
+                x += dir[k][0], y += dir[k][1];
             }
-            if (distance[i-dir[k][0]][j-dir[k][1]] > distance[x][y] + count) {
-                distance[i-dir[k][0]][j-dir[k][1]] = distance[x][y] + count;
-                dfs(maze, i-dir[k][0], j-dir[k][1], distance);
+            x -= dir[k][0], y-= dir[k][1];
+            if (count > 0 && d[x][y] > d[i][j]+count) {
+                d[x][y] = d[i][j] + count;
+                dfs(maze, d, x, y);
             }
         }
     }
     int shortestDistance(vector<vector<int>>& maze, vector<int>& start, vector<int>& dest) {
         int m = maze.size();
         int n = maze[0].size();
-        vector<vector<int>> distance(m, vector<int>(n, INT_MAX));
-        distance[start[0]][start[1]] = 0;
-        dfs(maze, start[0], start[1], distance);
-        return (distance[dest[0]][dest[1]] == INT_MAX ? -1 : distance[dest[0]][dest[1]]);
+        vector<vector<int>> d(m, vector<int>(n,INT_MAX));
+        d[start[0]][start[1]] = 0;
+        dfs(maze, d, start[0], start[1]);
+        return (d[dest[0]][dest[1]] == INT_MAX ? -1 : d[dest[0]][dest[1]]);
     }
 };
