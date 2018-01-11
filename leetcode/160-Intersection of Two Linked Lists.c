@@ -21,6 +21,19 @@
  * You may assume there are no cycles anywhere in the entire linked structure.
  * Your code should preferably run in O(n) time and use only O(1) memory.
  */
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        ListNode *pa = headA, *pb = headB;
+        while (pa != pb) {
+            pa = pa ? pa->next : headB;
+            pb = pb ? pb->next : headA;
+        }
+        return pa;
+    }
+};
+
+
     ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
         if (!headA || !headB) return NULL;
         ListNode *la = headA, *lb = headB;
