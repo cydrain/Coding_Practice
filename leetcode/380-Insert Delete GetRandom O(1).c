@@ -10,8 +10,8 @@
  */
 class RandomizedSet {
 private:
+    vector<int> nums;
     unordered_map<int,int> m;
-    vector<int> num;
 public:
     /** Initialize your data structure here. */
     RandomizedSet() {
@@ -20,26 +20,31 @@ public:
     
     /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
     bool insert(int val) {
-        if (m.find(val) != m.end()) return false;
-        m[val] = num.size();
-        num.push_back(val);
-        return true;
+        if (m.find(val) == m.end()) {
+            nums.push_back(val);
+            m[val] = nums.size()-1;
+            return true;
+        } else {
+            return false;
+        }
     }
     
     /** Removes a value from the set. Returns true if the set contained the specified element. */
     bool remove(int val) {
-        if (m.find(val) == m.end()) return false;
-        int last = num.back();
-        m[last] = m[val];
-        num[m[last]] = last;
-        num.pop_back();
-        m.erase(val);
-        return true;
+        if (m.find(val) != m.end()) {
+            int last = nums.back();
+            nums[m[val]] = last;
+            m[last] = m[val];
+            m.erase(val);
+            nums.pop_back();
+            return true;
+        } else {
+            return false;
+        }
     }
     
     /** Get a random element from the set. */
     int getRandom() {
-        return num[rand() % num.size()];
+        return nums[rand() % (nums.size())];
     }
 };
-

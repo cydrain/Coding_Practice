@@ -14,27 +14,23 @@
  */
 class MovingAverage {
 private:
-    queue<int> data;
-    int size;
+    queue<int> q;
     double sum;
+    int size;
 public:
     /** Initialize your data structure here. */
     MovingAverage(int size) {
-        this->size = size;
         this->sum = 0.0;
+        this->size = size;
     }
     
     double next(int val) {
-        if (data.size() < size) {
-            data.push(val);
-            sum += val;
-        } else {
-            int first = data.front();
-            sum = sum - first + val;
-            data.pop();
-            data.push(val);
+        q.push(val);
+        sum += val;
+        if (q.size() > size) {
+            sum -= q.front();
+            q.pop();
         }
-        return (sum / data.size());
+        return sum/q.size();
     }
 };
-
