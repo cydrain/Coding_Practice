@@ -50,3 +50,46 @@ public:
         }
     }
 };
+
+
+
+class Codec {
+public:
+    // Encodes a tree to a single string.
+    void serializeHelper(TreeNode* root, string& token) {
+        if (root == nullptr) {
+            token += "#,";
+            return;
+        } else {
+            token += to_string(root->val);
+            token += ",";
+            serializeHelper(root->left, token);
+            serializeHelper(root->right, token);
+        }
+    }
+    string serialize(TreeNode* root) {
+        string token;
+        serializeHelper(root, token);
+        return token;
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserializeHelper(string& data, int& pos) {
+        if (data[pos] == '#') {
+            pos += 2;
+            return nullptr;
+        } else {
+            int comma = data.find_first_of(',', pos);
+            int val = stoi(data.substr(pos, comma-pos));
+            pos = comma + 1;
+            TreeNode* node = new TreeNode(val);
+            node->left = deserializeHelper(data, pos);
+            node->right = deserializeHelper(data, pos);
+            return node;
+        }
+    }
+    TreeNode* deserialize(string data) {
+        int pos = 0;
+        return deserializeHelper(data, pos);
+    }
+};
