@@ -59,3 +59,32 @@ public:
         return count;
     }
 };
+
+
+
+class Solution {
+public:
+    void dfs(vector<vector<int>>& M, int row) {
+        int n = M.size(), i;
+        for (i = 0; i < n; i++) {
+            if (M[row][i] == 1) {
+                M[row][i] = M[i][row] = 0;
+                if (i != row) dfs(M, i);
+            }
+        }
+    }
+    int findCircleNum(vector<vector<int>>& M) {
+        if (M.empty()) return 0;
+        int n = M.size();
+        int i, j, circle = 0;
+        for (i = 0; i < n; i++) {
+            for (j = 0; j < n; j++) {
+                if (M[i][j] == 1) {
+                    dfs(M, i);
+                    circle++;
+                }
+            }
+        }
+        return circle;
+    }
+};
